@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdaComics</title>
+    <link rel="stylesheet" href="./scss/main.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous"> -->
+    <script src="https://kit.fontawesome.com/5b0f89b18e.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <div class="banner__header">
+            <div class="title__header">
+                <h1 class="h1__header">ADAComics</h1>
+            </div>
+        </div>
+        <div class="image__header"></div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="search">
+                <h2 class="search__title">Búsqueda</h2>
+                <div class="search__container">
+                    <div class="search__input">
+                        <input id="search__input" name="search__input" class="input" type="search" placeholder="Ingresá tu búsqueda">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                    </div>
+                    <div class="search__filters">
+                        <div class="search__type__sort">
+                            <label class="search__label" for="search__type">TIPO</label>
+                            <select class="search__select" name="search__type" id="search__type">
+                                <option value="comics" selected>COMICS</option>
+                                <option value="personajes">PERSONAJES</option>
+                            </select>
+                            <label class="search__label"  for="sort__search">ORDEN</label>
+                            <select class="search__select" name="sort__search" id="sort__search">
+                                <option value="AZ">A-Z</option>
+                                <option value="ZA">Z-A</option>
+                                <option value="newer">Más Nuevos</option>
+                                <option value="older">Más Viejos</option>
+                            </select>
+                        </div>
+                        <button class="search__button" type="button">BUSCAR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIONES OCULTAS DE BUSQUEDAS / FALTA CONTADOR -->
+            <div class="sections container" style="margin-bottom: 30px ;"></div>
+
+        </div>
+
+
+
+    <table class="container col-md-12" id="movies" border="1">
+        <thead>
+            <th style="width: 140px">Title</th>
+            <th style="width: 40px">Id</th>
+            <th style="width: 50px">Cover</th>
+            <th style="width: 500px">Description</th>
+            <th style="width: 200px">Characters</th>
+        </thead>
+        <tbody></tbody>
+    </table>
+    </main>
+    
+    <script src="./scripts/scripts.js"></script>
+</body>
+</html>
