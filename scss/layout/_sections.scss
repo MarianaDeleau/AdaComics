@@ -22,3 +22,78 @@
   flex-direction: row;
   justify-content: space-evenly;
 }
+
+.comic{
+  display: flex;
+  flex-direction: row;
+  margin: 30px 0;
+  padding-right: 30px;
+}
+
+.comic__cover{
+  width: 350px;
+  height: auto;
+  margin-right: 40px;
+}
+
+.character{
+  @extend .comic;
+}
+
+.character__picture{
+  @extend .comic__cover;
+}
+
+.comic__results{
+  width: 200px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+   
+}
+
+.comic-results-cover{
+  width: 180px;
+  height: auto;  
+  transition-duration: 0.3s;
+}
+
+.comic-results-title{
+  width: 180px;
+  height: auto; 
+}
+
+.character__results{
+  @extend .comic__results;
+  background-color: red;
+  overflow: hidden;
+  margin-top: 30px;
+}
+.character-results-picture{
+  @extend .comic-results-cover;
+  width: 200px;
+}
+.character-results-title{
+  @extend .comic-results-title;
+  background-color: red;
+  color: #FFF;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.comic-results-cover:hover{
+  transform: scale(1.05);
+  transition-duration: 0.5s;
+  filter:drop-shadow(2px 2px 2px grey);
+}
+
+.character-results-picture:hover{
+  transform: scale(1.08);
+  transition-duration: 0.5s;
+  filter:none;
+}
+
+
+
