@@ -29,7 +29,7 @@ fetch(urlComic)
    })
     .then(rta => {
         const comics = rta.data.results
-       console.log(comics)
+        //console.log(comics)
         const table = document.getElementById('movies');
     
         const tbody = table.getElementsByTagName('tbody')[0];
@@ -71,4 +71,49 @@ fetch(urlComic)
       
      })
      
-   
+const urlCharacter: string = `${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`
+     
+
+fetch(urlCharacter)
+   .then((response) => {
+      return response.json()
+   })
+    .then(rta => {
+        const characters = rta.data.results
+        //console.log(characters)
+        const table = document.getElementById('character');
+    
+        const tbody = document.getElementById('character__table');
+      
+      table.appendChild(tbody)
+
+        characters.forEach((character) => {
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            const td2 = document.createElement('td');
+            const td3 = document.createElement('td');
+            const td4 = document.createElement('td');
+            const text = document.createTextNode(character.name);
+            const text2 = document.createTextNode(character.id);
+            const text4 = document.createTextNode(character.description);
+            
+            
+
+            const picture = document.createElement('img');
+            picture.setAttribute('src', `${character.thumbnail.path}.${character.thumbnail.extension}`);
+            picture.style.width = '50px';
+            
+            tr.appendChild(td);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            tr.appendChild(td4);
+            td.appendChild(text);
+            td2.appendChild(text2);
+            td3.appendChild(picture)
+            td4.appendChild(text4);
+            tbody.appendChild(tr);
+
+
+          });
+      
+     })
