@@ -147,11 +147,12 @@
       -ms-flex-align: center;
           align-items: center;
   margin-bottom: 10px;
+  margin-right: 20px;
 }
 
 .comic-results-cover, .character-results-picture {
-  width: 180px;
-  height: auto;
+  width: 190px;
+  height: 270px;
   -webkit-transition-duration: 0.3s;
           transition-duration: 0.3s;
 }
@@ -194,5 +195,17 @@
           transition-duration: 0.5s;
   -webkit-filter: none;
           filter: none;
+}
+
+.results__grid {
+  width: 95%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 /*# sourceMappingURL=main.css.map */
