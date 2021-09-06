@@ -53,7 +53,7 @@
                     <div class="comic__cover">
                         <img src="http://i.annihil.us/u/prod/marvel/i/mg/2/00/4bb5ea7dc4b7a.jpg" alt="" class="comic__cover">
                     </div>
-                    <div class="comic__detail">
+                    <div id="comicSection" class="comic__detail">
                         <h2 class="comic__title">Hulk (2008) #8 (BUSCEMA VARIANT)</h2>
                         <h3>Publicado:</h3>
                         <p class="comic__published">26/11/2008</p>
@@ -78,11 +78,11 @@
                             too often misunderstood hero, the angrier the Hulk gets, the stronger the Hulk gets.</p>
                     </div>
                 </section>
-                <section class="results">
+                <section id="resultsSection" class="results">
                     <h2 class="results__title"></h2>
                     <p class="results__counter"><span></span>RESULTADOS</p>
-                    <div class="results__grid"></div>
-                    <div class="comic__results">
+                    <div id="resultsGrid" class="results__grid"></div>
+                    <!-- <div id="comicResults" class="comic__results">
                         <div class="comic-results-cover">
                             <img src="http://i.annihil.us/u/prod/marvel/i/mg/8/a0/603d5b82a5bc0/portrait_uncanny.jpg" alt=""
                                 class="comic-results-cover">
@@ -90,7 +90,7 @@
                         <div class="comic-results-title">
                             <h3>Fantastic Four by Dan Slott Vol. 1 (Hardcover)</h3>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="character__results">
                         <div class="character-results-picture">
                             <img src="http://i.annihil.us/u/prod/marvel/i/mg/3/70/5261a7f7b0917/portrait_uncanny.jpg" alt=""
@@ -107,13 +107,14 @@
 
 
 
-    <table class="container col-md-12" style="display: none;" id="movies" border="1">
+    <table class="container col-md-12" id="movies" border="1">
         <thead>
             <th style="width: 140px">Title</th>
             <th style="width: 40px">Id</th>
             <th style="width: 50px">Cover</th>
             <th style="width: 500px">Description</th>
             <th style="width: 200px">Characters</th>
+            <th style="width: 200px">Creators</th>
         </thead>
         <tbody></tbody>
     </table>
