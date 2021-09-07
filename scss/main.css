@@ -4,6 +4,10 @@
   font-size: 35px;
 }
 
+.results__title {
+  color: grey;
+}
+
 .input {
   width: 90%;
   border: transparent;
