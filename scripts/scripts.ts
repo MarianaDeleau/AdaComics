@@ -20,6 +20,9 @@ type Character = {
     comics: Comic[]
 }
 
+
+//PETICION COMICS
+
 const urlComic: string = `${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`
 
 fetch(urlComic)
@@ -37,21 +40,24 @@ fetch(urlComic)
             
     })
      
-const urlCharacter: string = `${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`
-    
 
-// fetch(urlCharacter)
-//    .then((response) => {
-//       return response.json()
-//    })
-//     .then(rta => {
-//         const characters = rta.data.results
-//         displayCharacters(characters)
-//         resultsCounter(rta)
-        
-//     })
+//PETICION PERSONAJES
+
+const urlCharacter: string = `${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`
+
+fetch(urlCharacter)
+   .then((response) => {
+      return response.json()
+   })
+    .then(rta => {
+        const characters = rta.data.results
+        displayCharacters(characters)
+        resultsCounter(rta)
+        //displaySelectedCharacter(characters)
+    })
      
 
+//FUNCION PARA CREAR NODOS
 
     const createNode = (tag, attr, ...children) => {
         const elem = document.createElement(tag);
@@ -109,7 +115,8 @@ const displayCharacters = (obj) => {
 
 }
 
-//FUNCION DISPLAY SECCION COMIC *INCOMPLETA*
+//FUNCION DISPLAY SECCION COMIC
+
 const displaySelectedComic = (obj) => {
     
     const comicSelected = document.getElementById('comicSelected')
@@ -137,9 +144,27 @@ const displaySelectedComic = (obj) => {
    
 }
 
+//FUNCION DISPLAY SECCION PERSONAJE
+
+const displaySelectedCharacter = (obj) => {
+
+    const characterSelected = document.getElementById('characterSelected');
+
+    for (const item of obj) {
+    
+        const characterPicture = createNode('img', { src: `${item.thumbnail.path}.${item.thumbnail.extension}`, alt: `${item.title}`, class:"character__picture"});
+        const divPicture = createNode('div', { class: "character__picture" }, characterPicture)
+        const characterName = createNode('h2', { class: "character__name" }, document.createTextNode(`${item.name}`))
+        const characterDescription = createNode('p', { class: "character__description" }, document.createTextNode(`${item.description}`))
+        const characterDetail = createNode('div', { class: "character__detail" },characterName, characterDescription  )
+        characterSelected.appendChild(divPicture)
+        characterSelected.appendChild(characterDetail)
+    }
+}
 
 
 //CONTADOR DE RESULTADOS
+
 const resultsCounter = (obj) => {
 
     const counter = document.getElementById('resultsCounter');
