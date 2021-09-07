@@ -137,6 +137,11 @@
   margin-right: 40px;
 }
 
+.character__picture {
+  -webkit-transition-duration: 0.5s;
+          transition-duration: 0.5s;
+}
+
 .comic__results, .character__results {
   width: 200px;
   height: 400px;
@@ -157,8 +162,10 @@
 .comic-results-cover, .character-results-picture {
   width: 190px;
   height: 270px;
-  -webkit-transition-duration: 0.3s;
-          transition-duration: 0.3s;
+  -webkit-transition-duration: 0.5s;
+          transition-duration: 0.5s;
+  -webkit-filter: drop-shadow(2px 2px 2px #515151);
+          filter: drop-shadow(2px 2px 2px #515151);
 }
 
 .comic-results-title, .character-results-title {
@@ -170,14 +177,22 @@
   background-color: red;
   overflow: hidden;
   margin-top: 30px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-transition-duration: 0.5s;
+          transition-duration: 0.5s;
 }
 
 .character-results-picture {
   width: 200px;
+  -webkit-transition-duration: 0.5s;
+          transition-duration: 0.5s;
+  -webkit-filter: none;
+          filter: none;
 }
 
 .character-results-title {
-  background-color: red;
+  background-color: transparent;
   color: #FFF;
   text-align: center;
   margin-top: 10px;
@@ -188,11 +203,25 @@
           transform: scale(1.05);
   -webkit-transition-duration: 0.5s;
           transition-duration: 0.5s;
-  -webkit-filter: drop-shadow(2px 2px 2px grey);
-          filter: drop-shadow(2px 2px 2px grey);
+  -webkit-filter: drop-shadow(2px 2px 2px #515151);
+          filter: drop-shadow(2px 2px 2px #515151);
 }
 
-.character-results-picture:hover {
+.character__picture:hover {
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
+  -webkit-transition-duration: 0.5s;
+          transition-duration: 0.5s;
+  -webkit-filter: drop-shadow(2px 2px 2px #515151);
+          filter: drop-shadow(2px 2px 2px #515151);
+}
+
+.character__results:hover {
+  background-color: #515151;
+  border: 4px solid red;
+}
+
+.character__results:hover .character-results-picture {
   -webkit-transform: scale(1.08);
           transform: scale(1.08);
   -webkit-transition-duration: 0.5s;
