@@ -49,11 +49,11 @@
 
             <!-- SECCIONES OCULTAS DE BUSQUEDAS -->
             <div class="sections__container" style="margin-bottom: 30px ;">
-                <section class="comic">
+                <section id="comicSelected" class="comic">
                     <div class="comic__cover">
                         <img src="http://i.annihil.us/u/prod/marvel/i/mg/2/00/4bb5ea7dc4b7a.jpg" alt="" class="comic__cover">
                     </div>
-                    <div id="comicSection" class="comic__detail">
+                    <div class="comic__detail">
                         <h2 class="comic__title">Hulk (2008) #8 (BUSCEMA VARIANT)</h2>
                         <h3>Publicado:</h3>
                         <p class="comic__published">26/11/2008</p>
@@ -79,8 +79,10 @@
                     </div>
                 </section>
                 <section id="resultsSection" class="results">
-                    <h2 class="results__title"></h2>
-                    <p class="results__counter"><span></span>RESULTADOS</p>
+                    <h2 class="results__title">
+                        <p class="results__counter">RESULTADOS: <span id="resultsCounter"></span>
+                        </p>
+                    </h2>
                     <div id="resultsGrid" class="results__grid"></div>
                     <!-- <div id="comicResults" class="comic__results">
                         <div class="comic-results-cover">
@@ -91,7 +93,7 @@
                             <h3>Fantastic Four by Dan Slott Vol. 1 (Hardcover)</h3>
                         </div>
                     </div> -->
-                    <div class="character__results">
+                    <!-- <div class="character__results">
                         <div class="character-results-picture">
                             <img src="http://i.annihil.us/u/prod/marvel/i/mg/3/70/5261a7f7b0917/portrait_uncanny.jpg" alt=""
                                 class="character-results-picture">
@@ -99,7 +101,7 @@
                         <div class="character-results-title">
                             <h3>HUMAN TORCH</h3>
                         </div>
-                    </div>
+                    </div> -->
                 </section>
             </div>
 
@@ -107,7 +109,7 @@
 
 
 
-    <table class="container col-md-12" id="movies" border="1">
+    <!-- <table class="container col-md-12" id="movies" border="1">
         <thead>
             <th style="width: 140px">Title</th>
             <th style="width: 40px">Id</th>
@@ -126,7 +128,7 @@
             <th style="width: 500px">Description</th>
         </thead>
         <tbody id="character__table"></tbody>
-    </table>
+    </table> -->
     </main>
     
     <script src="./scripts/scripts.js"></script>
