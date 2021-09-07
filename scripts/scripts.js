@@ -1,6 +1,7 @@
 var API_KEY = '42ae3fcea4ffd21315989c5e0dee4006';
 var BASE_URL = 'https://gateway.marvel.com/v1/public';
 var HASH = '5e2b4e7a9678fe99d5424aad34d696f1';
+//PETICION COMICS
 var urlComic = BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH;
 fetch(urlComic)
     .then(function (response) {
@@ -13,16 +14,19 @@ fetch(urlComic)
     resultsCounter(rta);
     //displaySelectedComic(comics)
 });
+//PETICION PERSONAJES
 var urlCharacter = BASE_URL + "/characters?ts=1&apikey=" + API_KEY + "&hash=" + HASH;
-// fetch(urlCharacter)
-//    .then((response) => {
-//       return response.json()
-//    })
-//     .then(rta => {
-//         const characters = rta.data.results
-//         displayCharacters(characters)
-//         resultsCounter(rta)
-//     })
+fetch(urlCharacter)
+    .then(function (response) {
+    return response.json();
+})
+    .then(function (rta) {
+    var characters = rta.data.results;
+    displayCharacters(characters);
+    resultsCounter(rta);
+    //displaySelectedCharacter(characters)
+});
+//FUNCION PARA CREAR NODOS
 var createNode = function (tag, attr) {
     var children = [];
     for (var _i = 2; _i < arguments.length; _i++) {
@@ -71,7 +75,7 @@ var displayCharacters = function (obj) {
         resultsGrid.appendChild(divCharacter);
     }
 };
-//FUNCION DISPLAY SECCION COMIC *INCOMPLETA*
+//FUNCION DISPLAY SECCION COMIC
 var displaySelectedComic = function (obj) {
     var comicSelected = document.getElementById('comicSelected');
     for (var _i = 0, obj_3 = obj; _i < obj_3.length; _i++) {
@@ -93,6 +97,20 @@ var displaySelectedComic = function (obj) {
         var comicDetail = createNode('div', { "class": "comic__detail" }, comicTitle, publishedTitle, publishedDate, writersTitle, comicWriters, descriptionTitle, comicDescription);
         comicSelected.appendChild(divCover);
         comicSelected.appendChild(comicDetail);
+    }
+};
+//FUNCION DISPLAY SECCION PERSONAJE
+var displaySelectedCharacter = function (obj) {
+    var characterSelected = document.getElementById('characterSelected');
+    for (var _i = 0, obj_4 = obj; _i < obj_4.length; _i++) {
+        var item = obj_4[_i];
+        var characterPicture = createNode('img', { src: item.thumbnail.path + "." + item.thumbnail.extension, alt: "" + item.title, "class": "character__picture" });
+        var divPicture = createNode('div', { "class": "character__picture" }, characterPicture);
+        var characterName = createNode('h2', { "class": "character__name" }, document.createTextNode("" + item.name));
+        var characterDescription = createNode('p', { "class": "character__description" }, document.createTextNode("" + item.description));
+        var characterDetail = createNode('div', { "class": "character__detail" }, characterName, characterDescription);
+        characterSelected.appendChild(divPicture);
+        characterSelected.appendChild(characterDetail);
     }
 };
 //CONTADOR DE RESULTADOS
