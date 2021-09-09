@@ -10,9 +10,9 @@ fetch(urlComic)
    })
     .then(rta => {
         const comics = rta.data.results
-        //console.log(comics)
-        displayComics(comics)
-        resultsCounter(rta)
+        console.log(comics)
+        //displayComics(comics)
+        //resultsCounter(rta)
         //displaySelectedComic(comics)
             
     })
@@ -24,6 +24,7 @@ fetch(urlComic)
 const displayComics = (obj) => {
 
     const resultsGrid = document.getElementById('resultsGrid')
+    resultsGrid.innerHTML = " ";
     
     obj.forEach((item: Comic) => {
         

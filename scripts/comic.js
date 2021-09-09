@@ -6,14 +6,15 @@ fetch(urlComic)
 })
     .then(function (rta) {
     var comics = rta.data.results;
-    //console.log(comics)
-    displayComics(comics);
-    resultsCounter(rta);
+    console.log(comics);
+    //displayComics(comics)
+    //resultsCounter(rta)
     //displaySelectedComic(comics)
 });
 //FUNCION DISPLAY GRILLA DE COMICS
 var displayComics = function (obj) {
     var resultsGrid = document.getElementById('resultsGrid');
+    resultsGrid.innerHTML = " ";
     obj.forEach(function (item) {
         var comicCover = createNode('img', { src: item.thumbnail.path + "." + item.thumbnail.extension, alt: "" + item.title, "class": "comic-results-cover" });
         var divCover = createNode('div', { "class": "comic-results-cover" }, comicCover);
