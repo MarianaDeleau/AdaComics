@@ -9,10 +9,15 @@
         margin: 5px;
         filter:drop-shadow(2px 2px 2px #515151);  
         transition: 0.3s;
+        
 }
 
 .paginationBtn:hover{
     background-color: #515151;
     transition: 0.5s;
     transform: scale(1.10);
+}
+
+.fas{
+    pointer-events: none;
 }
