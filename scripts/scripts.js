@@ -50,8 +50,7 @@ var pagination = function (e) {
                 .then(function (rta) {
                 var results = rta.data.results;
                 displayComics(results);
-                resultsCounter(rta);
-                //displaySelectedComic(comics)                    
+                //resultsCounter(rta)                   
             });
         case "backward1":
             console.log('backward1');
@@ -63,8 +62,7 @@ var pagination = function (e) {
                 .then(function (rta) {
                 var results = rta.data.results;
                 displayComics(results);
-                resultsCounter(rta);
-                //displaySelectedComic(comics)                    
+                //resultsCounter(rta)                 
             });
         case "forward1":
             console.log('forward1');
@@ -76,21 +74,26 @@ var pagination = function (e) {
                 .then(function (rta) {
                 var results = rta.data.results;
                 displayComics(results);
-                resultsCounter(rta);
-                //displaySelectedComic(comics)
+                //resultsCounter(rta)
             });
         case "end":
             console.log('end');
-            offset -= 20;
-            return fetch(BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&offset=" + offset)
+            return fetch(BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
                 .then(function (response) {
                 return response.json();
             })
                 .then(function (rta) {
-                var results = rta.data.results;
+                var total = rta.data.total;
+                offset = total - ((total % 20));
+                return fetch(BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&offset=" + offset);
+            })
+                .then(function (response) {
+                return response.json();
+            })
+                .then(function (data) {
+                var results = data.data.results;
                 displayComics(results);
-                resultsCounter(rta);
-                //displaySelectedComic(comics)                    
+                //resultsCounter(data)       
             });
         default:
             console.log("default");

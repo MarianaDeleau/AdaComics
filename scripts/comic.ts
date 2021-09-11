@@ -11,8 +11,8 @@ fetch(urlComic)
     .then(rta => {
         const comics = rta.data.results
         console.log(comics)
-        //displayComics(comics)
-        //resultsCounter(rta)
+        displayComics(comics)
+        resultsCounter(rta)
         //displaySelectedComic(comics)
             
     })

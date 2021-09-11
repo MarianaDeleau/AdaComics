@@ -55,30 +55,28 @@ const pagination = (e) => {
 
     switch (page) {        
         case "start":
-            console.log('start');
-            offset = 0;
-            return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
+                console.log('start');
+                offset = 0;
+                return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
                 .then((response) => {               
                     return response.json()               
                 })
                 .then(rta => {
                     const results = rta.data.results
                     displayComics(results)
-                    resultsCounter(rta)
-                    //displaySelectedComic(comics)                    
+                    //resultsCounter(rta)                   
                 });
         case "backward1":
-            console.log('backward1');
-            offset-=20
-            return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
+                console.log('backward1');
+                offset-=20
+                return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
                 .then((response) => {
                     return response.json()
                 })
                 .then(rta => {
                     const results = rta.data.results
                     displayComics(results)
-                    resultsCounter(rta)
-                    //displaySelectedComic(comics)                    
+                    //resultsCounter(rta)                 
                 });
         case "forward1":
                 console.log('forward1');
@@ -90,22 +88,27 @@ const pagination = (e) => {
                 .then(rta => {
                 const results = rta.data.results
                 displayComics(results)
-                resultsCounter(rta)
-                //displaySelectedComic(comics)
+                //resultsCounter(rta)
                 });
         case "end":
-            console.log('end');
-            offset-=20
-            return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
-            .then((response) => {
-                return response.json()
-            })
-            .then(rta => {
-                const results = rta.data.results
-                displayComics(results)
-                resultsCounter(rta)
-                //displaySelectedComic(comics)                    
-            })
+                console.log('end');
+                return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+                .then((response) => {
+                    return response.json()
+                })
+                .then(rta => {
+                    const total = rta.data.total
+                    offset = total - ((total % 20))
+                    return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
+                })
+                .then((response) => {
+                    return response.json()
+                    })
+                .then(data => {
+                    const results = data.data.results
+                    displayComics(results)
+                    //resultsCounter(data)       
+                })
         default:
             console.log("default");
         }

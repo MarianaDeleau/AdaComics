@@ -7,8 +7,8 @@ fetch(urlComic)
     .then(function (rta) {
     var comics = rta.data.results;
     console.log(comics);
-    //displayComics(comics)
-    //resultsCounter(rta)
+    displayComics(comics);
+    resultsCounter(rta);
     //displaySelectedComic(comics)
 });
 //FUNCION DISPLAY GRILLA DE COMICS
