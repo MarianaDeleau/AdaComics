@@ -9,8 +9,8 @@ fetch(urlCharacter)
     .then(rta => {
         const characters = rta.data.results
         console.log(characters)
-        displayCharacters(characters)
-        resultsCounter(rta)
+        //displayCharacters(characters)
+       // resultsCounter(rta)
         //displaySelectedCharacter(characters)
     })
      

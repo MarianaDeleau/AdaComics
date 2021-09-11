@@ -33,6 +33,33 @@
   margin-left: 15px;
 }
 
+.paginationBtn {
+  width: 50px;
+  height: 50px;
+  color: #FFF;
+  font-size: 20px;
+  background-color: #FF0000;
+  border: none;
+  border-radius: 5px;
+  margin: 5px;
+  -webkit-filter: drop-shadow(2px 2px 2px #515151);
+          filter: drop-shadow(2px 2px 2px #515151);
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.paginationBtn:hover {
+  background-color: #515151;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+}
+
+.fas {
+  pointer-events: none;
+}
+
 .banner__header {
   width: 100%;
   height: 80px;
@@ -240,5 +267,15 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+}
+
+.results__pagination {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-top: 40px;
 }
 /*# sourceMappingURL=main.css.map */

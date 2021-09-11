@@ -7,8 +7,8 @@ fetch(urlCharacter)
     .then(function (rta) {
     var characters = rta.data.results;
     console.log(characters);
-    displayCharacters(characters);
-    resultsCounter(rta);
+    //displayCharacters(characters)
+    // resultsCounter(rta)
     //displaySelectedCharacter(characters)
 });
 //FUNCION DISPLAY GRILLA DE PERSONAJES
