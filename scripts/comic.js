@@ -1,18 +1,32 @@
 //PETICION COMICS
 var urlComic = BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH;
-fetch(urlComic)
-    .then(function (response) {
-    return response.json();
-})
-    .then(function (rta) {
-    var comics = rta.data.results;
-    console.log(comics);
-    displayComics(comics);
-    resultsCounter(rta);
-    //displaySelectedComic(comics)
-});
+// fetch(urlComic)
+//     .then((response) => {
+//        return response.json()
+//    })
+//     .then(rta => {
+//         const comics = rta.data.results
+//         console.log(comics)
+//         displayComics(comics)
+//         resultsCounter(rta)
+//         //displaySelectedComic(comics)
+//     })
+//PETICION COMICS
+var fetchComics = function (offset) {
+    fetch(BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&offset=" + offset)
+        .then(function (response) {
+        return response.json();
+    })
+        .then(function (rta) {
+        var comics = rta.data.results;
+        var total = rta.data.total;
+        displayComics(comics, offset);
+        resultsCounter(total);
+    });
+};
+fetchComics(0);
 //FUNCION DISPLAY GRILLA DE COMICS
-var displayComics = function (obj) {
+var displayComics = function (obj, offset) {
     var resultsGrid = document.getElementById('resultsGrid');
     resultsGrid.innerHTML = " ";
     obj.forEach(function (item) {
@@ -20,7 +34,7 @@ var displayComics = function (obj) {
         var divCover = createNode('div', { "class": "comic-results-cover" }, comicCover);
         var comicTitle = createNode('h3', { "class": 'h3' }, document.createTextNode(item.title));
         var divTitle = createNode('div', { "class": "comic-results-title" }, comicTitle);
-        var divComic = createNode('div', { "class": "comic__results" }, divCover, divTitle);
+        var divComic = createNode('div', { "class": "comic__results", href: "./index.html?title=" + item.title + "&id=" + item.id + "&offset=" + offset }, divCover, divTitle);
         resultsGrid.appendChild(divComic);
     });
 };

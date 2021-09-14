@@ -1,116 +1,119 @@
 //TIPOS DEFINIDOS
 
 type Comic = {
-    id?: number;
-    digitalId?: number;
-    title?: string;
-    issueNumber?: number;
-    variantDescription?: string;
-    description?: string;
-    modified?: Date;
-    isbn?: string;
-    upc?: string;
-    diamondCode?: string;
-    ean?: string;
-    issn?: string;
-    format?: string;
-    pageCount?: number;
-    textObjects?: {
-        type?: string;
-        language?: string;
-        text?: string;
-    };
-    resourceURI?: string;
-    urls?: URL[];
+    id?: number,
+    digitalId?: number,
+    title?: string,
+    issueNumber?: number,
+    variantDescription?: string,
+    description?: string,
+    modified?: Date,
+    isbn?: string,
+    upc?: string,
+    diamondCode?: string,
+    ean?: string,
+    issn?: string,
+    format?: string,
+    pageCount?: number,
+    textObjects?: [{
+        type?: string,
+        language?: string,
+        text?: string,
+    }],
+    resourceURI?: string,
+    urls?: [{
+        type?: string,
+        url?: string
+    }],
     series?: {
-        resourceURI?: string;
-        name?: string;
-    };
-    variants?: any[];
-    collections?: any[];
-    collectedIssues?: any[];
+        resourceURI?: string,
+        name?: string,
+    },
+    variants?: [],
+    collections?: [],
+    collectedIssues?: [],
     dates: [{
-        type?: string;
-        date?: string;
+        type?: string,
+        date?: string,
     },
         {
-        type?: string;
-        date?: string;
-        }];
+        type?: string,
+        date?: string,
+        }],
     prices?:             {
-        type?:  string;
-        price?: number;
-    };
+        type?:  string,
+        price?: number,
+    },
     thumbnail?: {
-        path?: string;
-        extension?: string;
-    };
-    images?: any[];
+        path?: string,
+        extension?: string,
+    },
+    images?: [],
     creators?: {
         available?: number,
         collectionURI?: string,
-        items?: any[],
+        items?: [],
         returned?: number
-    };
+    },
     characters?: {
         available?: number,
         collectionURI?: string,
-        items?: any[],
+        items?: [],
         returned?: number,
-    };
+    },
     stories?: {
         available?: number,
         collectionURI?: string,
-        items?: any[],
-    };
+        items?: [],
+    },
     events?: {
         available?: number,
         collectionURI?: string,
-        items?: any[],
+        items?: [],
         returned?: number,
-    };
+    },
 }
 
 
 type Character = {
-    id?:          number;
-    name?:        string;
-    description?: string;
-    modified?:    Date;
+    id?:          number,
+    name?:        string,
+    description?: string,
+    modified?:    Date,
     thumbnail?:  {
-        path?:    string;
-        extension?: string;
-    };
-    resourceURI?: string;
+        path?:    string,
+        extension?: string,
+    },
+    resourceURI?: string,
     comics?:      {
-        available?: number;
-        collectionURI?: string;
+        available?: number,
+        collectionURI?: string,
         items?:        [{
-            resourceURI?: string;
-            name?:        string;
-        }];
-        returned?:      number;
-    };
+            resourceURI?: string,
+            name?:        string,
+        }],
+        returned?:      number,
+    },
     series?:      {
-        available?:     number;
-        collectionURI?: string;
-        items?:         any[];
-        returned?:      number;
-    };
+        available?:     number,
+        collectionURI?: string,
+        items?:         [],
+        returned?:      number,
+    },
     stories?:     {
-        available?:     number;
-        collectionURI?: string;
-        items?:         any[];
-        returned?:      number;
-    };
+        available?:     number,
+        collectionURI?: string,
+        items?:         [],
+        returned?:      number,
+    },
     events?:     {
-        available?:     number;
-        collectionURI?: string;
-        items?:         any[];
-        returned?:      number;
-    };
+        available?:     number,
+        collectionURI?: string,
+        items?:         [],
+        returned?:      number,
+    },
     urls?:       [{
-        type?: string;
-        url?:  string;
-    }];
+        type?: string,
+        url?:  string,
+    }],
 }
