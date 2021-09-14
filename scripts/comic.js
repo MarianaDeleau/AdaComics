@@ -22,6 +22,7 @@ var fetchComics = function (offset) {
         var total = rta.data.total;
         displayComics(comics, offset);
         resultsCounter(total);
+        disableButtons(offset, total);
     });
 };
 fetchComics(0);

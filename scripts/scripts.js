@@ -34,90 +34,24 @@ var resultsCounter = function (total) {
 };
 //PAGINACION
 var btnStart = document.getElementById('btnStart');
-var previousPage = document.getElementById('previousPage');
+var btnPreviousPage = document.getElementById('previousPage');
 var btnEnd = document.getElementById('btnEnd');
-var nextPage = document.getElementById('nextPage');
-// const pagination = (e) => {
-//     const selected = e.target
-//     const page = selected.value
-//     switch (page) {        
-//         case "start":
-//                 console.log('start');
-//                 offset = 0;
-//                 return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
-//                 .then((response) => {               
-//                     return response.json()               
-//                 })
-//                 .then(rta => {
-//                     const results = rta.data.results
-//                     const total = rta.data.total
-//                     const offset = rta.data.offset
-//                     displayComics(results, offset)
-//                     resultsCounter(total)                   
-//                 });
-//         case "backward1":
-//                 console.log('backward1');
-//                 offset-=20
-//                 return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
-//                 .then((response) => {
-//                     return response.json()
-//                 })
-//                 .then(rta => {
-//                     const results = rta.data.results
-//                     const total = rta.data.total
-//                     const offset = rta.data.offset
-//                     displayComics(results, offset)
-//                     resultsCounter(total)                  
-//                 });
-//         case "forward1":
-//                 console.log('forward1');
-//                 offset+=20
-//                 return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
-//                 .then((response) => {               
-//                 return response.json()               
-//                 })
-//                 .then(rta => {
-//                     const results = rta.data.results
-//                     const total = rta.data.total
-//                     const offset = rta.data.offset
-//                     displayComics(results, offset)
-//                     resultsCounter(total)     
-//                 });
-//         case "end":
-//                 console.log('end');
-//                 return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-//                 .then((response) => {
-//                     return response.json()
-//                 })
-//                 .then(rta => {
-//                     const total = rta.data.total
-//                     offset = total - ((total % 20))
-//                     return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
-//                 })
-//                 .then((response) => {
-//                     return response.json()
-//                     })
-//                 .then(data => {
-//                     const results = data.data.results
-//                     displayComics(results, offset)
-//                     //resultsCounter(data)       
-//                 })
-//         default:
-//             console.log("default");
-//         }
-// }
+var btnNextPage = document.getElementById('nextPage');
 var pagination = function (e) {
     var selected = e.target;
     var page = selected.value;
     switch (page) {
         case "start":
             offset = 0;
+            console.log(offset);
             return fetchComics(offset);
         case "previousPage":
             offset -= 20;
+            console.log(offset);
             return fetchComics(offset);
         case "nextPage":
             offset += 20;
+            console.log(offset);
             return fetchComics(offset);
         case "end":
             return fetch(BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
@@ -127,6 +61,7 @@ var pagination = function (e) {
                 .then(function (rta) {
                 var total = rta.data.total;
                 offset = total - ((total % 20));
+                console.log(offset);
                 return fetchComics(offset);
             });
         default:
@@ -134,6 +69,33 @@ var pagination = function (e) {
     }
 };
 btnStart.addEventListener('click', pagination);
-previousPage.addEventListener('click', pagination);
+btnPreviousPage.addEventListener('click', pagination);
 btnEnd.addEventListener('click', pagination);
-nextPage.addEventListener('click', pagination);
+btnNextPage.addEventListener('click', pagination);
+//FUNCION PARA DESABILITAR BOTONES DE PAGINADO
+var disableButtons = function (offset, total) {
+    if (offset === 0) {
+        btnStart.disabled = true;
+        btnStart.style.backgroundColor = 'transparent';
+        btnPreviousPage.disabled = true;
+        btnPreviousPage.style.backgroundColor = 'transparent';
+    }
+    else {
+        btnStart.disabled = false;
+        btnStart.style.backgroundColor = '#FF0000';
+        btnPreviousPage.disabled = false;
+        btnPreviousPage.style.backgroundColor = '#FF0000';
+    }
+    if (offset + 20 >= total) {
+        btnEnd.disabled = true;
+        btnEnd.style.backgroundColor = 'transparent';
+        btnNextPage.disabled = true;
+        btnNextPage.style.backgroundColor = 'transparent';
+    }
+    else {
+        btnEnd.disabled = false;
+        btnEnd.style.backgroundColor = '#FF0000';
+        btnNextPage.disabled = false;
+        btnNextPage.style.backgroundColor = '#FF0000';
+    }
+};

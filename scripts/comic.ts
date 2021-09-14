@@ -32,6 +32,7 @@ const fetchComics = (offset) => {
         const total = rta.data.total
         displayComics(comics, offset)
         resultsCounter(total)
+        disableButtons(offset, total)
     
     })
 
