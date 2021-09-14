@@ -39,6 +39,7 @@ var btnEnd = document.getElementById('btnEnd');
 var btnNextPage = document.getElementById('nextPage');
 var pagination = function (e) {
     var selected = e.target;
+    // console.log(e.target)
     var page = selected.value;
     switch (page) {
         case "start":
