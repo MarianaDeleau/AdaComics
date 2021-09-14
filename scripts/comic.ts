@@ -2,7 +2,26 @@
 
 const urlComic: string = `${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`
 
-fetch(urlComic)
+// fetch(urlComic)
+//     .then((response) => {
+       
+//        return response.json()
+       
+//    })
+//     .then(rta => {
+//         const comics = rta.data.results
+//         console.log(comics)
+//         displayComics(comics)
+//         resultsCounter(rta)
+//         //displaySelectedComic(comics)
+            
+//     })
+     
+
+//PETICION COMICS
+const fetchComics = (offset) => {
+
+    fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
     .then((response) => {
        
        return response.json()
@@ -10,18 +29,19 @@ fetch(urlComic)
    })
     .then(rta => {
         const comics = rta.data.results
-        console.log(comics)
-        displayComics(comics)
-        resultsCounter(rta)
-        //displaySelectedComic(comics)
-            
+        const total = rta.data.total
+        displayComics(comics, offset)
+        resultsCounter(total)
+    
     })
-     
+
+}
+
+fetchComics(0)
+
     //FUNCION DISPLAY GRILLA DE COMICS
 
-
-
-const displayComics = (obj) => {
+const displayComics = (obj, offset) => {
 
     const resultsGrid = document.getElementById('resultsGrid')
     resultsGrid.innerHTML = " ";
@@ -32,10 +52,10 @@ const displayComics = (obj) => {
         const divCover = createNode('div', { class: "comic-results-cover" }, comicCover)
         const comicTitle = createNode('h3', { class: 'h3' }, document.createTextNode(item.title))
         const divTitle = createNode('div', { class: "comic-results-title" }, comicTitle)
-        const divComic = createNode('div', { class: "comic__results" }, divCover, divTitle)
+        const divComic = createNode('div', { class: "comic__results", href: `./index.html?title=${item.title}&id=${item.id}&offset=${offset}` }, divCover, divTitle)
         resultsGrid.appendChild(divComic)
     });
-    
+  
 }
 //FUNCION DISPLAY SECCION COMIC
 
@@ -44,7 +64,7 @@ const displaySelectedComic = (obj) => {
     const comicSelected = document.getElementById('comicSelected')
 
     obj.forEach((item: Comic) => {
-        const comicCover = createNode('img', { src: `${item.thumbnail.path}.${item.thumbnail.extension}`, alt: `${item.title}`, class:"comic__cover"});
+        const comicCover = createNode('img', { src: `${item.thumbnail.path}.${item.thumbnail.extension}`, alt: `${item.title}`, class:"comic__cover" });
         const divCover = createNode('div', { class: "comic__cover" }, comicCover)
         const comicTitle = createNode('h2', { class: "comic__title" }, document.createTextNode(`${item.title}`))
         const publishedTitle = createNode('h3', { class: "h3" }, document.createTextNode('Publicado:'))
