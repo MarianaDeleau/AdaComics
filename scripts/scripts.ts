@@ -52,6 +52,7 @@ const btnNextPage = document.getElementById('nextPage')
 const pagination = (e) => {
         
     const selected = e.target
+   // console.log(e.target)
     const page = selected.value
 
     switch (page) {        
