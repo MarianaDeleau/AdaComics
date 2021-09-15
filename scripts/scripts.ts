@@ -59,17 +59,21 @@ const pagination = (e) => {
         case "start":
                 offset = 0;        
                 console.log(offset)
-                return fetchComics(offset)
+            //return fetchComics(offset)
+            return fetchCharacter(offset)
         case "previousPage":
                 offset -= 20
                 console.log(offset)
-                return fetchComics(offset)
+                //return fetchComics(offset)
+                return fetchCharacter(offset)
         case "nextPage":
                 offset += 20
                 console.log(offset)
-                return fetchComics(offset)
+                //return fetchComics(offset)
+                return fetchCharacter(offset)
         case "end":
-                return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+            //return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+            return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
                 .then((response) => {
                     return response.json()
                 })
@@ -77,7 +81,8 @@ const pagination = (e) => {
                     const total = rta.data.total
                     offset = total - ((total % 20))
                     console.log(offset)
-                    return fetchComics(offset)  
+                    //return fetchComics(offset)  
+                    return fetchCharacter(offset)
                 })
         default:
             console.log("default");
