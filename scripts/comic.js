@@ -20,12 +20,12 @@ var fetchComics = function (offset) {
         .then(function (rta) {
         var comics = rta.data.results;
         var total = rta.data.total;
-        displayComics(comics, offset);
-        resultsCounter(total);
-        disableButtons(offset, total);
+        // displayComics(comics, offset)
+        // resultsCounter(total)
+        // disableButtons(offset, total)
     });
 };
-fetchComics(0);
+//fetchComics(0)
 //FUNCION DISPLAY GRILLA DE COMICS
 var comics = document.getElementsByClassName("comic__results");
 var displayComics = function (obj, offset) {
@@ -54,7 +54,7 @@ var displaySelectedComic = function (e) {
     var resultsSection = document.getElementById('resultsSection');
     console.log(comicSelectedId);
     setTimeout(function () {
-        fetch(BASE_URL + "/comics/" + comicSelectedId + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&id=")
+        fetch(BASE_URL + "/comics/" + comicSelectedId + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
             .then(function (response) {
             return response.json();
         })

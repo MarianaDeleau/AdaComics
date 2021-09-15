@@ -30,15 +30,15 @@ const fetchComics = (offset) => {
     .then(rta => {
         const comics = rta.data.results
         const total = rta.data.total
-        displayComics(comics, offset)
-        resultsCounter(total)
-        disableButtons(offset, total)
+        // displayComics(comics, offset)
+        // resultsCounter(total)
+        // disableButtons(offset, total)
     
     })
 
 }
 
-fetchComics(0)
+//fetchComics(0)
 
 //FUNCION DISPLAY GRILLA DE COMICS
 const comics = document.getElementsByClassName("comic__results");
@@ -83,7 +83,7 @@ const displaySelectedComic = (e) => {
 
     setTimeout(() => {
         
-        fetch(`${BASE_URL}/comics/${comicSelectedId}?ts=1&apikey=${API_KEY}&hash=${HASH}&id=`)
+        fetch(`${BASE_URL}/comics/${comicSelectedId}?ts=1&apikey=${API_KEY}&hash=${HASH}`)
     .then((response) => {
        
        return response.json()

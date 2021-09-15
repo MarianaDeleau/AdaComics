@@ -45,17 +45,21 @@ var pagination = function (e) {
         case "start":
             offset = 0;
             console.log(offset);
-            return fetchComics(offset);
+            //return fetchComics(offset)
+            return fetchCharacter(offset);
         case "previousPage":
             offset -= 20;
             console.log(offset);
-            return fetchComics(offset);
+            //return fetchComics(offset)
+            return fetchCharacter(offset);
         case "nextPage":
             offset += 20;
             console.log(offset);
-            return fetchComics(offset);
+            //return fetchComics(offset)
+            return fetchCharacter(offset);
         case "end":
-            return fetch(BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
+            //return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+            return fetch(BASE_URL + "/characters?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
                 .then(function (response) {
                 return response.json();
             })
@@ -63,7 +67,8 @@ var pagination = function (e) {
                 var total = rta.data.total;
                 offset = total - ((total % 20));
                 console.log(offset);
-                return fetchComics(offset);
+                //return fetchComics(offset)  
+                return fetchCharacter(offset);
             });
         default:
             console.log("default");
