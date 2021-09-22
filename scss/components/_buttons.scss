@@ -21,3 +21,8 @@
 .fas{
     pointer-events: none;
 }
+
+.search__button{
+    @extend .paginationBtn;
+    width: 120px
+}

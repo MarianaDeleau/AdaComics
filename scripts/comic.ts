@@ -2,26 +2,6 @@
 
 const urlComic: string = `${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`
 
-//PETICION COMICS
-// const fetchComics = (offset) => {
-
-//     fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
-//     .then((response) => {
-       
-//        return response.json()
-       
-//    })
-//     .then(rta => {
-//         const comics = rta.data.results
-//         const total = rta.data.total
-//         displayComics(comics, offset)
-//         resultsCounter(total)
-//         disableButtons(offset, total)
-    
-//     })
-
-// }
-
 const fetchMarvel = (offset) => {
 
     const type = searchType.value
