@@ -3,7 +3,7 @@ var BASE_URL = 'https://gateway.marvel.com/v1/public';
 var HASH = '5e2b4e7a9678fe99d5424aad34d696f1';
 var offset = 0;
 var resultCounter = 0;
-//const params = new URLSearchParams(window.location.search);
+var params = new URLSearchParams(window.location.search);
 //FUNCION PARA CREAR NODOS
 var createNode = function (tag, attr) {
     var children = [];
@@ -45,21 +45,21 @@ var pagination = function (e) {
         case "start":
             offset = 0;
             console.log(offset);
-            //return fetchComics(offset)
-            return fetchCharacter(offset);
+            return fetchComics(offset);
+        //return fetchCharacter(offset)
         case "previousPage":
             offset -= 20;
             console.log(offset);
-            //return fetchComics(offset)
-            return fetchCharacter(offset);
+            return fetchComics(offset);
+        //return fetchCharacter(offset)
         case "nextPage":
             offset += 20;
             console.log(offset);
-            //return fetchComics(offset)
-            return fetchCharacter(offset);
+            return fetchComics(offset);
+        //return fetchCharacter(offset)
         case "end":
-            //return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-            return fetch(BASE_URL + "/characters?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
+            return fetch(BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
+                //return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
                 .then(function (response) {
                 return response.json();
             })
@@ -67,8 +67,8 @@ var pagination = function (e) {
                 var total = rta.data.total;
                 offset = total - ((total % 20));
                 console.log(offset);
-                //return fetchComics(offset)  
-                return fetchCharacter(offset);
+                return fetchComics(offset);
+                //return fetchCharacter(offset)
             });
         default:
             console.log("default");
@@ -105,3 +105,18 @@ var disableButtons = function (offset, total) {
         btnNextPage.style.backgroundColor = '#FF0000';
     }
 };
+var searchForm = document.getElementById('searchForm');
+var setHomeParams = function () {
+    //e.preventDefault();
+    var searchInput = document.getElementById('search__input');
+    var searchType = document.getElementById('search__type');
+    var sortSearch = document.getElementById('sort__search');
+    console.log(searchInput.value);
+    console.log(searchType.value);
+    console.log(sortSearch.value);
+    params.set('search', searchInput.value);
+    params.set('type', searchType.value);
+    params.set('sort', sortSearch.value);
+    window.location.href = window.location.pathname + "?" + params.toString();
+};
+searchForm.addEventListener('change', setHomeParams);

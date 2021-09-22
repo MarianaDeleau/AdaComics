@@ -6,7 +6,7 @@ const HASH:string = '5e2b4e7a9678fe99d5424aad34d696f1'
 let offset = 0
 let resultCounter = 0
 
-//const params = new URLSearchParams(window.location.search);
+const params = new URLSearchParams(window.location.search);
 
 //FUNCION PARA CREAR NODOS
 
@@ -59,21 +59,21 @@ const pagination = (e) => {
         case "start":
                 offset = 0;        
                 console.log(offset)
-            //return fetchComics(offset)
-            return fetchCharacter(offset)
+            return fetchComics(offset)
+            //return fetchCharacter(offset)
         case "previousPage":
                 offset -= 20
                 console.log(offset)
-                //return fetchComics(offset)
-                return fetchCharacter(offset)
+                return fetchComics(offset)
+                //return fetchCharacter(offset)
         case "nextPage":
                 offset += 20
                 console.log(offset)
-                //return fetchComics(offset)
-                return fetchCharacter(offset)
+                return fetchComics(offset)
+                //return fetchCharacter(offset)
         case "end":
-            //return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-            return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+            return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+            //return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
                 .then((response) => {
                     return response.json()
                 })
@@ -81,8 +81,8 @@ const pagination = (e) => {
                     const total = rta.data.total
                     offset = total - ((total % 20))
                     console.log(offset)
-                    //return fetchComics(offset)  
-                    return fetchCharacter(offset)
+                    return fetchComics(offset)  
+                    //return fetchCharacter(offset)
                 })
         default:
             console.log("default");
@@ -125,3 +125,25 @@ const disableButtons = (offset, total) => {
     }
 
 }
+
+const searchForm = document.getElementById('searchForm')
+
+const setHomeParams = () => {
+    //e.preventDefault();
+    const searchInput = document.getElementById('search__input');
+    const searchType = document.getElementById('search__type');
+    const sortSearch = document.getElementById('sort__search');
+
+    console.log(searchInput.value)
+    console.log(searchType.value)
+    console.log(sortSearch.value)
+    params.set('search', searchInput.value)
+    params.set('type', searchType.value)
+    params.set('sort', sortSearch.value)
+    
+    window.location.href = `${window.location.pathname}?${params.toString()}`
+    
+}
+
+searchForm.addEventListener('change', setHomeParams)
+

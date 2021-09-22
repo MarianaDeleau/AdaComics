@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AdaComics</title>
     <link rel="stylesheet" href="./scss/main.css">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous"> -->
     <script src="https://kit.fontawesome.com/5b0f89b18e.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -22,9 +21,9 @@
         <div class="container">
             <div class="search">
                 <h2 class="search__title">Búsqueda</h2>
-                <div class="search__container">
+                <form id="searchForm" class="search__container">
                     <div class="search__input">
-                        <input id="search__input" name="search__input" class="input" type="search" placeholder="Ingresá tu búsqueda">
+                        <input id="search__input" name="search__input" class="input" type="search" placeholder="Ingresá tu búsqueda" />
                         <i class="fas fa-search" aria-hidden="true"></i>
                     </div>
                     <div class="search__filters">
@@ -44,7 +43,7 @@
                         </div>
                         <button class="search__button" type="button">BUSCAR</button>
                     </div>
-                </div>
+                </form>
             </div>
 
             <!-- SECCIONES OCULTAS DE BUSQUEDAS -->
@@ -121,28 +120,6 @@
 
         </div>
 
-
-
-    <!-- <table class="container col-md-12" id="movies" border="1">
-        <thead>
-            <th style="width: 140px">Title</th>
-            <th style="width: 40px">Id</th>
-            <th style="width: 50px">Cover</th>
-            <th style="width: 500px">Description</th>
-            <th style="width: 200px">Characters</th>
-            <th style="width: 200px">Creators</th>
-        </thead>
-        <tbody></tbody>
-    </table>
-    <table class="container col-md-12" id="character" border="1">
-        <thead>
-            <th style="width: 140px">Name</th>
-            <th style="width: 40px">Id</th>
-            <th style="width: 50px">Picture</th>
-            <th style="width: 500px">Description</th>
-        </thead>
-        <tbody id="character__table"></tbody>
-    </table> -->
     </main>
     
     <script src="./scripts/scripts.js"></script>

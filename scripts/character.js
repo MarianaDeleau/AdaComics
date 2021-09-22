@@ -25,7 +25,7 @@ var fetchCharacter = function (offset) {
         disableButtons(offset, total);
     });
 };
-fetchCharacter(0);
+//fetchCharacter(0)
 //FUNCION DISPLAY GRILLA DE PERSONAJES
 var characters = document.getElementsByClassName("character__results");
 var displayCharacters = function (obj, offset) {
