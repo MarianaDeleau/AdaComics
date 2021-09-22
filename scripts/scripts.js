@@ -4,6 +4,15 @@ var HASH = '5e2b4e7a9678fe99d5424aad34d696f1';
 var offset = 0;
 var resultCounter = 0;
 var params = new URLSearchParams(window.location.search);
+//const searchForm = document.getElementById('searchForm');
+var searchInput = document.getElementById('search__input');
+var searchType = document.getElementById('search__type');
+var sortSsearch = document.getElementById('sort__search');
+var searchBtn = document.getElementById('search__button');
+var btnStart = document.getElementById('btnStart');
+var btnPreviousPage = document.getElementById('previousPage');
+var btnEnd = document.getElementById('btnEnd');
+var btnNextPage = document.getElementById('nextPage');
 //FUNCION PARA CREAR NODOS
 var createNode = function (tag, attr) {
     var children = [];
@@ -33,103 +42,34 @@ var resultsCounter = function (total) {
     counter.innerHTML = total;
 };
 //PAGINACION
-var btnStart = document.getElementById('btnStart');
-var btnPreviousPage = document.getElementById('previousPage');
-var btnEnd = document.getElementById('btnEnd');
-var btnNextPage = document.getElementById('nextPage');
-// const pagination = (e) => {
-//     const selected = e.target
-//     const page = selected.value
-//     switch (page) {        
-//         case "start":
-//                 offset = 0;        
-//                 console.log(offset)
-//             return fetchComics(offset)
-//             //return fetchCharacter(offset)
-//         case "previousPage":
-//                 offset -= 20
-//                 console.log(offset)
-//                 return fetchComics(offset)
-//                 //return fetchCharacter(offset)
-//         case "nextPage":
-//                 offset += 20
-//                 console.log(offset)
-//                 return fetchComics(offset)
-//                 //return fetchCharacter(offset)
-//         case "end":
-//             return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-//             //return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-//                 .then((response) => {
-//                     return response.json()
-//                 })
-//                 .then(rta => {
-//                     const total = rta.data.total
-//                     offset = total - ((total % 20))
-//                     console.log(offset)
-//                     return fetchComics(offset)  
-//                     //return fetchCharacter(offset)
-//                 })
-//         default:
-//             console.log("default");
-//     }
-// }
-var searchType = document.getElementById('search__type');
 var pagination = function (e) {
     var selected = e.target;
     var page = selected.value;
     var typeValue = searchType.value;
-    console.log(typeValue);
-    if (typeValue === 'comics') {
-        switch (page) {
-            case "start":
-                offset = 0;
-                return fetchComics(offset);
-            case "previousPage":
-                offset -= 20;
-                return fetchComics(offset);
-            case "nextPage":
-                offset += 20;
-                return fetchComics(offset);
-            case "end":
-                return fetch(BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
-                    .then(function (response) {
-                    return response.json();
-                })
-                    .then(function (rta) {
-                    var total = rta.data.total;
-                    offset = total - ((total % 20));
-                    return fetchComics(offset);
-                });
-            default:
-                offset = 0;
-                return fetchComics(offset);
-        }
-    }
-    else if (typeValue === 'personajes') {
-        switch (page) {
-            case "start":
-                offset = 0;
-                return fetchCharacter(offset);
-            case "previousPage":
-                offset -= 20;
-                return fetchCharacter(offset);
-            case "nextPage":
-                offset += 20;
-                return fetchCharacter(offset);
-            case "end":
-                return fetch(BASE_URL + "/characters?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
-                    .then(function (response) {
-                    return response.json();
-                })
-                    .then(function (rta) {
-                    var total = rta.data.total;
-                    offset = total - ((total % 20));
-                    return fetchCharacter(offset);
-                });
-            default:
-                offset = 0;
-                return fetchCharacter(offset);
-        }
+    switch (page) {
+        case "start":
+            offset = 0;
+            return filter(offset);
+        case "previousPage":
+            offset -= 20;
+            return filter(offset);
+        case "nextPage":
+            offset += 20;
+            return filter(offset);
+        case "end":
+            return fetch(BASE_URL + "/" + typeValue + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
+                .then(function (response) {
+                return response.json();
+            })
+                .then(function (rta) {
+                var total = rta.data.total;
+                console.log(total);
+                offset = total - ((total % 20));
+                return filter(offset);
+            });
+        default:
+            offset = 0;
+            return filter(offset);
     }
 };
 btnStart.addEventListener('click', pagination);
@@ -164,17 +104,110 @@ var disableButtons = function (offset, total) {
         btnNextPage.style.backgroundColor = '#FF0000';
     }
 };
-//const searchForm = document.getElementById('searchForm')
-var searchBtn = document.getElementById('search__button');
-var setHomeParams = function (e) {
-    e.preventDefault();
+//FILTROS
+var filter = function () {
+    //e.preventDefault();
+    var title = searchInput.value;
+    var type = searchType.value;
+    var sort = sortSsearch.value;
+    if (type === 'comics') {
+        fetch(BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&offset=" + offset + "&" + sort + "&titleStartsWith=" + (title || 'a'))
+            .then(function (response) {
+            return response.json();
+        })
+            .then(function (rta) {
+            var results = rta.data.results;
+            var total = rta.data.total;
+            displayComics(results, offset);
+            resultsCounter(total);
+            disableButtons(offset, total);
+        });
+    }
+    else if (type === 'characters') {
+        fetch(BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&offset=" + offset + "&nameStartsWith=" + title)
+            .then(function (response) {
+            return response.json();
+        })
+            .then(function (rta) {
+            var results = rta.data.results;
+            var total = rta.data.total;
+            displayCharacters(results, offset);
+            resultsCounter(total);
+            disableButtons(offset, total);
+        });
+    }
+};
+searchBtn.addEventListener('click', filter);
+//SETEAR PARAMS
+var setHomeParams = function () {
+    //e.preventDefault();
     // const searchInput = document.getElementById('search__input');
     // const searchType = document.getElementById('search__type');
     // const sortSearch = document.getElementById('sort__search');
     // // params.set('search', searchInput.value)
     // // params.set('type', searchType.value)
     // // params.set('sort', sortSearch.value)
-    // console.log(params)
-    window.location.href = window.location.pathname + "?" + params.toString();
+    //console.log(params)
+    //window.location.href = `${window.location.pathname}?${params.toString()}`
+    window.location.href = window.location.pathname + "?";
 };
-searchBtn.addEventListener('submit', setHomeParams);
+//searchBtn.addEventListener('submit', setHomeParams)
+//searchType.addEventListener('change', setHomeParams)
+//paginado anterior
+// const pagination = (e) => {
+//         const selected = e.target
+//     const page = selected.value
+//     const typeValue = searchType.value
+//     console.log(typeValue)
+//     if (typeValue === 'comics') {
+//         switch (page) {
+//             case "start":
+//                 offset = 0;
+//                 return fetchComics(offset)
+//             case "previousPage":
+//                 offset -= 20
+//                 return fetchComics(offset)
+//             case "nextPage":
+//                 offset += 20
+//                 return fetchComics(offset)
+//             case "end":
+//                 return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+//                     .then((response) => {
+//                         return response.json()
+//                     })
+//                     .then(rta => {
+//                         const total = rta.data.total
+//                         offset = total - ((total % 20))
+//                         return fetchComics(offset)
+//                     })
+//             default:
+//                 offset = 0;
+//                 return fetchComics(offset)
+//         }
+//     } else if (typeValue === 'characters') {
+//     switch (page) {        
+//         case "start":
+//                 offset = 0;        
+//                 return fetchCharacter(offset)
+//         case "previousPage":
+//                 offset -= 20
+//                return fetchCharacter(offset)
+//         case "nextPage":
+//                 offset += 20
+//                 return fetchCharacter(offset)
+//         case "end":
+//                 return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+//                 .then((response) => {
+//                     return response.json()
+//                 })
+//                 .then(rta => {
+//                     const total = rta.data.total
+//                     offset = total - ((total % 20))
+//                     return fetchCharacter(offset)
+//                 })
+//         default:
+//             offset = 0;
+//             return fetchCharacter(offset)
+//         }
+//     }
+// }

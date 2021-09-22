@@ -8,6 +8,20 @@ let resultCounter = 0
 
 const params = new URLSearchParams(window.location.search);
 
+//const searchForm = document.getElementById('searchForm');
+const searchInput = document.getElementById('search__input');
+const searchType = document.getElementById('search__type');
+const sortSsearch = document.getElementById('sort__search');
+
+const searchBtn = document.getElementById('search__button')
+const btnStart = document.getElementById('btnStart')
+const btnPreviousPage = document.getElementById('previousPage')
+const btnEnd = document.getElementById('btnEnd')
+const btnNextPage = document.getElementById('nextPage')
+
+
+
+
 //FUNCION PARA CREAR NODOS
 
     const createNode = (tag, attr, ...children) => {
@@ -29,7 +43,6 @@ const params = new URLSearchParams(window.location.search);
     
         return elem;
 };
-    
 
 //CONTADOR DE RESULTADOS
 
@@ -41,115 +54,41 @@ const resultsCounter = (total) => {
 
 }
 
-
 //PAGINACION
 
-const btnStart = document.getElementById('btnStart')
-const btnPreviousPage = document.getElementById('previousPage')
-const btnEnd = document.getElementById('btnEnd')
-const btnNextPage = document.getElementById('nextPage')
-
-// const pagination = (e) => {
-        
-//     const selected = e.target
-//     const page = selected.value
-    
-
-//     switch (page) {        
-//         case "start":
-//                 offset = 0;        
-//                 console.log(offset)
-//             return fetchComics(offset)
-//             //return fetchCharacter(offset)
-//         case "previousPage":
-//                 offset -= 20
-//                 console.log(offset)
-//                 return fetchComics(offset)
-//                 //return fetchCharacter(offset)
-//         case "nextPage":
-//                 offset += 20
-//                 console.log(offset)
-//                 return fetchComics(offset)
-//                 //return fetchCharacter(offset)
-//         case "end":
-//             return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-//             //return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-//                 .then((response) => {
-//                     return response.json()
-//                 })
-//                 .then(rta => {
-//                     const total = rta.data.total
-//                     offset = total - ((total % 20))
-//                     console.log(offset)
-//                     return fetchComics(offset)  
-//                     //return fetchCharacter(offset)
-//                 })
-//         default:
-//             console.log("default");
-            
-//     }
-// }
-const searchType = document.getElementById('search__type');
 
 const pagination = (e) => {
     
-        const selected = e.target
+    const selected = e.target
     const page = selected.value
     const typeValue = searchType.value
-    console.log(typeValue)
-    if (typeValue === 'comics') {
-        switch (page) {
-            case "start":
-                offset = 0;
-                return fetchComics(offset)
-            case "previousPage":
-                offset -= 20
-                return fetchComics(offset)
-            case "nextPage":
-                offset += 20
-                return fetchComics(offset)
-            case "end":
-                return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-                    .then((response) => {
-                        return response.json()
-                    })
-                    .then(rta => {
-                        const total = rta.data.total
-                        offset = total - ((total % 20))
-                        return fetchComics(offset)
-                    })
-            default:
-                offset = 0;
-                return fetchComics(offset)
-        }
-    
-    } else if (typeValue === 'personajes') {
 
-    switch (page) {        
+    switch (page) {
         case "start":
-                offset = 0;        
-                return fetchCharacter(offset)
+            offset = 0;
+            return filter(offset)
         case "previousPage":
-                offset -= 20
-               return fetchCharacter(offset)
+            offset -= 20
+            return filter(offset)
         case "nextPage":
-                offset += 20
-                return fetchCharacter(offset)
+            offset += 20
+            return filter(offset)
         case "end":
-                return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+            return fetch(`${BASE_URL}/${typeValue}?ts=1&apikey=${API_KEY}&hash=${HASH}`)
                 .then((response) => {
                     return response.json()
                 })
                 .then(rta => {
                     const total = rta.data.total
+                    console.log(total)
                     offset = total - ((total % 20))
-                    return fetchCharacter(offset)
+                    return filter(offset)
                 })
         default:
             offset = 0;
-            return fetchCharacter(offset)
-        }
+            return filter(offset)
     }
+
 }
 
 btnStart.addEventListener('click', pagination)
@@ -159,6 +98,7 @@ btnNextPage.addEventListener('click', pagination)
 searchType.addEventListener('change', pagination)
 
 //FUNCION PARA DESABILITAR BOTONES DE PAGINADO
+
 const disableButtons = (offset, total) => {
 
     if (offset === 0) {
@@ -187,11 +127,51 @@ const disableButtons = (offset, total) => {
 
 }
 
-//const searchForm = document.getElementById('searchForm')
-const searchBtn = document.getElementById('search__button')
+//FILTROS
 
-const setHomeParams = (e) => {
-    e.preventDefault();
+const filter = () => {
+    //e.preventDefault();
+    const title = searchInput.value
+    const type = searchType.value
+    const sort = sortSsearch.value
+    
+    if (type === 'comics') {
+        fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}&${sort}&titleStartsWith=${title || 'a' }`)
+        .then((response) => {
+            return response.json()
+        })
+         .then(rta => {
+             const results = rta.data.results
+             const total = rta.data.total
+             displayComics(results, offset)
+             resultsCounter(total)
+             disableButtons(offset, total)
+             
+         })
+        
+    } else if (type === 'characters') {
+        fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}&nameStartsWith=${title}`)
+    .then((response) => {
+       return response.json()
+   })
+    .then(rta => {
+        const results = rta.data.results
+        const total = rta.data.total
+        displayCharacters(results, offset)
+        resultsCounter(total)
+        disableButtons(offset, total)
+    })
+    
+    }
+    
+}
+
+searchBtn.addEventListener('click', filter)
+
+
+//SETEAR PARAMS
+const setHomeParams = () => {
+    //e.preventDefault();
     // const searchInput = document.getElementById('search__input');
     // const searchType = document.getElementById('search__type');
     // const sortSearch = document.getElementById('sort__search');
@@ -199,10 +179,74 @@ const setHomeParams = (e) => {
     // // params.set('search', searchInput.value)
     // // params.set('type', searchType.value)
     // // params.set('sort', sortSearch.value)
-    // console.log(params)
-    window.location.href = `${window.location.pathname}?${params.toString()}`
-    
+    //console.log(params)
+    //window.location.href = `${window.location.pathname}?${params.toString()}`
+    window.location.href = `${window.location.pathname}?`
 }
 
-searchBtn.addEventListener('submit', setHomeParams)
+//searchBtn.addEventListener('submit', setHomeParams)
+//searchType.addEventListener('change', setHomeParams)
 
+
+//paginado anterior
+// const pagination = (e) => {
+    
+//         const selected = e.target
+//     const page = selected.value
+//     const typeValue = searchType.value
+//     console.log(typeValue)
+//     if (typeValue === 'comics') {
+//         switch (page) {
+//             case "start":
+//                 offset = 0;
+//                 return fetchComics(offset)
+//             case "previousPage":
+//                 offset -= 20
+//                 return fetchComics(offset)
+//             case "nextPage":
+//                 offset += 20
+//                 return fetchComics(offset)
+//             case "end":
+//                 return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+//                     .then((response) => {
+//                         return response.json()
+//                     })
+//                     .then(rta => {
+//                         const total = rta.data.total
+//                         offset = total - ((total % 20))
+//                         return fetchComics(offset)
+//                     })
+//             default:
+//                 offset = 0;
+//                 return fetchComics(offset)
+//         }
+    
+//     } else if (typeValue === 'characters') {
+
+//     switch (page) {        
+//         case "start":
+//                 offset = 0;        
+//                 return fetchCharacter(offset)
+//         case "previousPage":
+//                 offset -= 20
+//                return fetchCharacter(offset)
+//         case "nextPage":
+//                 offset += 20
+//                 return fetchCharacter(offset)
+//         case "end":
+//                 return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+//                 .then((response) => {
+//                     return response.json()
+//                 })
+//                 .then(rta => {
+//                     const total = rta.data.total
+//                     offset = total - ((total % 20))
+//                     return fetchCharacter(offset)
+//                 })
+//         default:
+//             offset = 0;
+//             return fetchCharacter(offset)
+//         }
+//     }
+
+// }

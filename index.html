@@ -21,7 +21,7 @@
         <div class="container">
             <div class="search">
                 <h2 class="search__title">Búsqueda</h2>
-                <form id="searchForm" class="search__container">
+                <div id="searchForm" class="search__container">
                     <div class="search__input">
                         <input id="search__input" name="search__input" class="input" type="search" placeholder="Ingresá tu búsqueda" />
                         <i class="fas fa-search" aria-hidden="true"></i>
@@ -31,19 +31,19 @@
                             <label class="search__label" for="search__type">TIPO</label>
                             <select class="search__select" name="search__type" id="search__type">
                                 <option value="comics" selected>COMICS</option>
-                                <option value="personajes">PERSONAJES</option>
+                                <option value="characters">PERSONAJES</option>
                             </select>
                             <label class="search__label"  for="sort__search">ORDEN</label>
                             <select class="search__select" name="sort__search" id="sort__search">
-                                <option value="AZ">A-Z</option>
-                                <option value="ZA">Z-A</option>
-                                <option value="newer">Más Nuevos</option>
-                                <option value="older">Más Viejos</option>
+                                <option value="orderBy=title">A-Z</option>
+                                <option value="orderBy=-title">Z-A</option>
+                                <option value="orderBy=-onsaleDate">Más Nuevos</option>
+                                <option value="orderBy=onsaleDate">Más Viejos</option>
                             </select>
                         </div>
                         <button id="search__button" class="search__button" type="submit">BUSCAR</button>
                     </div>
-                </form>
+                </div>
             </div>
 
             <!-- SECCIONES OCULTAS DE BUSQUEDAS -->
