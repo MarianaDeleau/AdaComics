@@ -37,47 +37,106 @@ var btnStart = document.getElementById('btnStart');
 var btnPreviousPage = document.getElementById('previousPage');
 var btnEnd = document.getElementById('btnEnd');
 var btnNextPage = document.getElementById('nextPage');
+// const pagination = (e) => {
+//     const selected = e.target
+//     const page = selected.value
+//     switch (page) {        
+//         case "start":
+//                 offset = 0;        
+//                 console.log(offset)
+//             return fetchComics(offset)
+//             //return fetchCharacter(offset)
+//         case "previousPage":
+//                 offset -= 20
+//                 console.log(offset)
+//                 return fetchComics(offset)
+//                 //return fetchCharacter(offset)
+//         case "nextPage":
+//                 offset += 20
+//                 console.log(offset)
+//                 return fetchComics(offset)
+//                 //return fetchCharacter(offset)
+//         case "end":
+//             return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+//             //return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+//                 .then((response) => {
+//                     return response.json()
+//                 })
+//                 .then(rta => {
+//                     const total = rta.data.total
+//                     offset = total - ((total % 20))
+//                     console.log(offset)
+//                     return fetchComics(offset)  
+//                     //return fetchCharacter(offset)
+//                 })
+//         default:
+//             console.log("default");
+//     }
+// }
+var searchType = document.getElementById('search__type');
 var pagination = function (e) {
     var selected = e.target;
-    // console.log(e.target)
     var page = selected.value;
-    switch (page) {
-        case "start":
-            offset = 0;
-            console.log(offset);
-            return fetchComics(offset);
-        //return fetchCharacter(offset)
-        case "previousPage":
-            offset -= 20;
-            console.log(offset);
-            return fetchComics(offset);
-        //return fetchCharacter(offset)
-        case "nextPage":
-            offset += 20;
-            console.log(offset);
-            return fetchComics(offset);
-        //return fetchCharacter(offset)
-        case "end":
-            return fetch(BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
-                //return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-                .then(function (response) {
-                return response.json();
-            })
-                .then(function (rta) {
-                var total = rta.data.total;
-                offset = total - ((total % 20));
-                console.log(offset);
+    var typeValue = searchType.value;
+    console.log(typeValue);
+    if (typeValue === 'comics') {
+        switch (page) {
+            case "start":
+                offset = 0;
                 return fetchComics(offset);
-                //return fetchCharacter(offset)
-            });
-        default:
-            console.log("default");
+            case "previousPage":
+                offset -= 20;
+                return fetchComics(offset);
+            case "nextPage":
+                offset += 20;
+                return fetchComics(offset);
+            case "end":
+                return fetch(BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
+                    .then(function (response) {
+                    return response.json();
+                })
+                    .then(function (rta) {
+                    var total = rta.data.total;
+                    offset = total - ((total % 20));
+                    return fetchComics(offset);
+                });
+            default:
+                offset = 0;
+                return fetchComics(offset);
+        }
+    }
+    else if (typeValue === 'personajes') {
+        switch (page) {
+            case "start":
+                offset = 0;
+                return fetchCharacter(offset);
+            case "previousPage":
+                offset -= 20;
+                return fetchCharacter(offset);
+            case "nextPage":
+                offset += 20;
+                return fetchCharacter(offset);
+            case "end":
+                return fetch(BASE_URL + "/characters?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
+                    .then(function (response) {
+                    return response.json();
+                })
+                    .then(function (rta) {
+                    var total = rta.data.total;
+                    offset = total - ((total % 20));
+                    return fetchCharacter(offset);
+                });
+            default:
+                offset = 0;
+                return fetchCharacter(offset);
+        }
     }
 };
 btnStart.addEventListener('click', pagination);
 btnPreviousPage.addEventListener('click', pagination);
 btnEnd.addEventListener('click', pagination);
 btnNextPage.addEventListener('click', pagination);
+searchType.addEventListener('change', pagination);
 //FUNCION PARA DESABILITAR BOTONES DE PAGINADO
 var disableButtons = function (offset, total) {
     if (offset === 0) {
@@ -105,18 +164,17 @@ var disableButtons = function (offset, total) {
         btnNextPage.style.backgroundColor = '#FF0000';
     }
 };
-var searchForm = document.getElementById('searchForm');
-var setHomeParams = function () {
-    //e.preventDefault();
-    var searchInput = document.getElementById('search__input');
-    var searchType = document.getElementById('search__type');
-    var sortSearch = document.getElementById('sort__search');
-    console.log(searchInput.value);
-    console.log(searchType.value);
-    console.log(sortSearch.value);
-    params.set('search', searchInput.value);
-    params.set('type', searchType.value);
-    params.set('sort', sortSearch.value);
+//const searchForm = document.getElementById('searchForm')
+var searchBtn = document.getElementById('search__button');
+var setHomeParams = function (e) {
+    e.preventDefault();
+    // const searchInput = document.getElementById('search__input');
+    // const searchType = document.getElementById('search__type');
+    // const sortSearch = document.getElementById('sort__search');
+    // // params.set('search', searchInput.value)
+    // // params.set('type', searchType.value)
+    // // params.set('sort', sortSearch.value)
+    // console.log(params)
     window.location.href = window.location.pathname + "?" + params.toString();
 };
-searchForm.addEventListener('change', setHomeParams);
+searchBtn.addEventListener('submit', setHomeParams);

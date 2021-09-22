@@ -49,53 +49,114 @@ const btnPreviousPage = document.getElementById('previousPage')
 const btnEnd = document.getElementById('btnEnd')
 const btnNextPage = document.getElementById('nextPage')
 
-const pagination = (e) => {
+// const pagination = (e) => {
         
-    const selected = e.target
-   // console.log(e.target)
+//     const selected = e.target
+//     const page = selected.value
+    
+
+//     switch (page) {        
+//         case "start":
+//                 offset = 0;        
+//                 console.log(offset)
+//             return fetchComics(offset)
+//             //return fetchCharacter(offset)
+//         case "previousPage":
+//                 offset -= 20
+//                 console.log(offset)
+//                 return fetchComics(offset)
+//                 //return fetchCharacter(offset)
+//         case "nextPage":
+//                 offset += 20
+//                 console.log(offset)
+//                 return fetchComics(offset)
+//                 //return fetchCharacter(offset)
+//         case "end":
+//             return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+//             //return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+//                 .then((response) => {
+//                     return response.json()
+//                 })
+//                 .then(rta => {
+//                     const total = rta.data.total
+//                     offset = total - ((total % 20))
+//                     console.log(offset)
+//                     return fetchComics(offset)  
+//                     //return fetchCharacter(offset)
+//                 })
+//         default:
+//             console.log("default");
+            
+//     }
+// }
+const searchType = document.getElementById('search__type');
+
+const pagination = (e) => {
+    
+        const selected = e.target
     const page = selected.value
+    const typeValue = searchType.value
+    console.log(typeValue)
+    if (typeValue === 'comics') {
+        switch (page) {
+            case "start":
+                offset = 0;
+                return fetchComics(offset)
+            case "previousPage":
+                offset -= 20
+                return fetchComics(offset)
+            case "nextPage":
+                offset += 20
+                return fetchComics(offset)
+            case "end":
+                return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+                    .then((response) => {
+                        return response.json()
+                    })
+                    .then(rta => {
+                        const total = rta.data.total
+                        offset = total - ((total % 20))
+                        return fetchComics(offset)
+                    })
+            default:
+                offset = 0;
+                return fetchComics(offset)
+        }
+    
+    } else if (typeValue === 'personajes') {
 
     switch (page) {        
         case "start":
                 offset = 0;        
-                console.log(offset)
-            return fetchComics(offset)
-            //return fetchCharacter(offset)
+                return fetchCharacter(offset)
         case "previousPage":
                 offset -= 20
-                console.log(offset)
-                return fetchComics(offset)
-                //return fetchCharacter(offset)
+               return fetchCharacter(offset)
         case "nextPage":
                 offset += 20
-                console.log(offset)
-                return fetchComics(offset)
-                //return fetchCharacter(offset)
+                return fetchCharacter(offset)
         case "end":
-            return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-            //return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+                return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
                 .then((response) => {
                     return response.json()
                 })
                 .then(rta => {
                     const total = rta.data.total
                     offset = total - ((total % 20))
-                    console.log(offset)
-                    return fetchComics(offset)  
-                    //return fetchCharacter(offset)
+                    return fetchCharacter(offset)
                 })
         default:
-            console.log("default");
-            
+            offset = 0;
+            return fetchCharacter(offset)
+        }
     }
 }
-
 
 btnStart.addEventListener('click', pagination)
 btnPreviousPage.addEventListener('click', pagination)
 btnEnd.addEventListener('click', pagination)
 btnNextPage.addEventListener('click', pagination)
-
+searchType.addEventListener('change', pagination)
 
 //FUNCION PARA DESABILITAR BOTONES DE PAGINADO
 const disableButtons = (offset, total) => {
@@ -126,24 +187,22 @@ const disableButtons = (offset, total) => {
 
 }
 
-const searchForm = document.getElementById('searchForm')
+//const searchForm = document.getElementById('searchForm')
+const searchBtn = document.getElementById('search__button')
 
-const setHomeParams = () => {
-    //e.preventDefault();
-    const searchInput = document.getElementById('search__input');
-    const searchType = document.getElementById('search__type');
-    const sortSearch = document.getElementById('sort__search');
+const setHomeParams = (e) => {
+    e.preventDefault();
+    // const searchInput = document.getElementById('search__input');
+    // const searchType = document.getElementById('search__type');
+    // const sortSearch = document.getElementById('sort__search');
 
-    console.log(searchInput.value)
-    console.log(searchType.value)
-    console.log(sortSearch.value)
-    params.set('search', searchInput.value)
-    params.set('type', searchType.value)
-    params.set('sort', sortSearch.value)
-    
+    // // params.set('search', searchInput.value)
+    // // params.set('type', searchType.value)
+    // // params.set('sort', sortSearch.value)
+    // console.log(params)
     window.location.href = `${window.location.pathname}?${params.toString()}`
     
 }
 
-searchForm.addEventListener('change', setHomeParams)
+searchBtn.addEventListener('submit', setHomeParams)
 
