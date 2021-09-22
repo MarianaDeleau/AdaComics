@@ -1,19 +1,5 @@
 //PETICION PERSONAJES
 var urlCharacter = BASE_URL + "/characters?ts=1&apikey=" + API_KEY + "&hash=" + HASH;
-//PETICION COMICS
-// const fetchCharacter = (offset) => {
-//     fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
-//     .then((response) => {
-//        return response.json()
-//    })
-//     .then(rta => {
-//         const characters = rta.data.results
-//         const total = rta.data.total
-//         displayCharacters(characters, offset)
-//         resultsCounter(total)
-//         disableButtons(offset, total)
-//     })
-// }
 //FUNCION DISPLAY GRILLA DE PERSONAJES
 var characters = document.getElementsByClassName("character__results");
 var displayCharacters = function (obj, offset) {
