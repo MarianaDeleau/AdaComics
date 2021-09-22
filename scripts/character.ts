@@ -34,7 +34,7 @@ const fetchCharacter = (offset) => {
 
 }
 
-fetchCharacter(0)
+//fetchCharacter(0)
      
 //FUNCION DISPLAY GRILLA DE PERSONAJES
 

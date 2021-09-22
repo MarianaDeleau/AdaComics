@@ -20,12 +20,12 @@ var fetchComics = function (offset) {
         .then(function (rta) {
         var comics = rta.data.results;
         var total = rta.data.total;
-        // displayComics(comics, offset)
-        // resultsCounter(total)
-        // disableButtons(offset, total)
+        displayComics(comics, offset);
+        resultsCounter(total);
+        disableButtons(offset, total);
     });
 };
-//fetchComics(0)
+fetchComics(0);
 //FUNCION DISPLAY GRILLA DE COMICS
 var comics = document.getElementsByClassName("comic__results");
 var displayComics = function (obj, offset) {
