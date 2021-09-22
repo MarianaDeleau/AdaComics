@@ -15,7 +15,6 @@ var urlComic = BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH;
 //     })
 // }
 var fetchMarvel = function (offset) {
-    var title = searchInput.value;
     var type = searchType.value;
     var sort = sortSsearch.value;
     if (type === 'comics') {

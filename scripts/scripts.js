@@ -4,10 +4,15 @@ var HASH = '5e2b4e7a9678fe99d5424aad34d696f1';
 var offset = 0;
 var resultCounter = 0;
 var params = new URLSearchParams(window.location.search);
-var searchForm = document.getElementById('searchForm');
+//const searchForm = document.getElementById('searchForm');
 var searchInput = document.getElementById('search__input');
 var searchType = document.getElementById('search__type');
 var sortSsearch = document.getElementById('sort__search');
+var searchBtn = document.getElementById('search__button');
+var btnStart = document.getElementById('btnStart');
+var btnPreviousPage = document.getElementById('previousPage');
+var btnEnd = document.getElementById('btnEnd');
+var btnNextPage = document.getElementById('nextPage');
 //FUNCION PARA CREAR NODOS
 var createNode = function (tag, attr) {
     var children = [];
@@ -37,10 +42,6 @@ var resultsCounter = function (total) {
     counter.innerHTML = total;
 };
 //PAGINACION
-var btnStart = document.getElementById('btnStart');
-var btnPreviousPage = document.getElementById('previousPage');
-var btnEnd = document.getElementById('btnEnd');
-var btnNextPage = document.getElementById('nextPage');
 var pagination = function (e) {
     var selected = e.target;
     var page = selected.value;
@@ -48,13 +49,13 @@ var pagination = function (e) {
     switch (page) {
         case "start":
             offset = 0;
-            return fetchMarvel(offset);
+            return filter(offset);
         case "previousPage":
             offset -= 20;
-            return fetchMarvel(offset);
+            return filter(offset);
         case "nextPage":
             offset += 20;
-            return fetchMarvel(offset);
+            return filter(offset);
         case "end":
             return fetch(BASE_URL + "/" + typeValue + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
                 .then(function (response) {
@@ -62,12 +63,13 @@ var pagination = function (e) {
             })
                 .then(function (rta) {
                 var total = rta.data.total;
+                console.log(total);
                 offset = total - ((total % 20));
-                return fetchMarvel(offset);
+                return filter(offset);
             });
         default:
             offset = 0;
-            return fetchMarvel(offset);
+            return filter(offset);
     }
 };
 btnStart.addEventListener('click', pagination);
@@ -105,22 +107,37 @@ var disableButtons = function (offset, total) {
 //FILTROS
 var filter = function () {
     //e.preventDefault();
+    var title = searchInput.value;
+    var type = searchType.value;
     var sort = sortSsearch.value;
-    return fetch(BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&" + sort)
-        .then(function (response) {
-        return response.json();
-    })
-        .then(function (rta) {
-        var results = rta.data.results;
-        offset = 0;
-        displayComics(results, offset);
-    });
-    //console.log(sort)
+    if (type === 'comics') {
+        fetch(BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&offset=" + offset + "&" + sort + "&titleStartsWith=" + (title || 'a'))
+            .then(function (response) {
+            return response.json();
+        })
+            .then(function (rta) {
+            var results = rta.data.results;
+            var total = rta.data.total;
+            displayComics(results, offset);
+            resultsCounter(total);
+            disableButtons(offset, total);
+        });
+    }
+    else if (type === 'characters') {
+        fetch(BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&offset=" + offset + "&nameStartsWith=" + title)
+            .then(function (response) {
+            return response.json();
+        })
+            .then(function (rta) {
+            var results = rta.data.results;
+            var total = rta.data.total;
+            displayCharacters(results, offset);
+            resultsCounter(total);
+            disableButtons(offset, total);
+        });
+    }
 };
-//filter()
-//searchForm.addEventListener('submit', filter)
-//const searchForm = document.getElementById('searchForm')
-//const searchBtn = document.getElementById('search__button')
+searchBtn.addEventListener('click', filter);
 //SETEAR PARAMS
 var setHomeParams = function () {
     //e.preventDefault();
@@ -136,43 +153,6 @@ var setHomeParams = function () {
 };
 //searchBtn.addEventListener('submit', setHomeParams)
 //searchType.addEventListener('change', setHomeParams)
-//filtros posibles
-// const typeOpFilter = (obj, filterType) => {
-//       return obj.filter(
-//         item => item.type === filterType
-//       )};
-// const sortDate = (obj1, obj2) => {
-//     if (obj1.date > obj2.date) {
-//         return 1
-//     }
-//     if (obj1.date < obj2.date) {
-//         return -1;
-//     }
-//     return 0;
-// };
-// const sortAZ = (obj1, obj2) => {
-//     if (obj1.title > obj2.title || obj1.name > obj2.name) {
-//       return 1
-//     }
-//     if (obj1.title < obj2.title || obj1.name > obj2.name) {
-//       return -1;
-//     }
-//     return 0;
-// }
-// const allSort = (obj, sortType) => {
-//     switch(sortType){
-//     //   case "older":
-//     //     return obj.sort((obj1, obj2) => { return sortDate(obj1, obj2) });
-//     //   case "newer":
-//     //     return obj.sort((obj1, obj2) => { return sortDate(obj2, obj1) });
-//       case "AZ":
-//         return obj.sort((obj1, obj2) => { return sortAZ(obj1, obj2) });
-//       case "ZA":
-//         return obj.sort((obj1, obj2) => { return sortAZ(obj2, obj1) });
-//       default:
-//         return obj
-//     }
-// };
 //paginado anterior
 // const pagination = (e) => {
 //         const selected = e.target

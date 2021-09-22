@@ -24,17 +24,12 @@ const urlComic: string = `${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}
 
 const fetchMarvel = (offset) => {
 
-    const title = searchInput.value
     const type = searchType.value
     const sort = sortSsearch.value
-    
     if (type === 'comics') {
-
         fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}&${sort}`)
         .then((response) => {
-       
             return response.json()
-            
         })
          .then(rta => {
              const results = rta.data.results
@@ -42,16 +37,12 @@ const fetchMarvel = (offset) => {
              displayComics(results, offset)
              resultsCounter(total)
              disableButtons(offset, total)
-         
          })
         
     } else if (type === 'characters') {
         fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
-
     .then((response) => {
-       
        return response.json()
-       
    })
     .then(rta => {
         const results = rta.data.results
@@ -59,7 +50,6 @@ const fetchMarvel = (offset) => {
         displayCharacters(results, offset)
         resultsCounter(total)
         disableButtons(offset, total)
-    
     })
 }
 }

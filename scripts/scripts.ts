@@ -8,10 +8,19 @@ let resultCounter = 0
 
 const params = new URLSearchParams(window.location.search);
 
-const searchForm = document.getElementById('searchForm');
+//const searchForm = document.getElementById('searchForm');
 const searchInput = document.getElementById('search__input');
 const searchType = document.getElementById('search__type');
 const sortSsearch = document.getElementById('sort__search');
+
+const searchBtn = document.getElementById('search__button')
+const btnStart = document.getElementById('btnStart')
+const btnPreviousPage = document.getElementById('previousPage')
+const btnEnd = document.getElementById('btnEnd')
+const btnNextPage = document.getElementById('nextPage')
+
+
+
 
 //FUNCION PARA CREAR NODOS
 
@@ -47,10 +56,6 @@ const resultsCounter = (total) => {
 
 //PAGINACION
 
-const btnStart = document.getElementById('btnStart')
-const btnPreviousPage = document.getElementById('previousPage')
-const btnEnd = document.getElementById('btnEnd')
-const btnNextPage = document.getElementById('nextPage')
 
 const pagination = (e) => {
     
@@ -61,13 +66,13 @@ const pagination = (e) => {
     switch (page) {
         case "start":
             offset = 0;
-            return fetchMarvel(offset)
+            return filter(offset)
         case "previousPage":
             offset -= 20
-            return fetchMarvel(offset)
+            return filter(offset)
         case "nextPage":
             offset += 20
-            return fetchMarvel(offset)
+            return filter(offset)
         case "end":
             return fetch(`${BASE_URL}/${typeValue}?ts=1&apikey=${API_KEY}&hash=${HASH}`)
                 .then((response) => {
@@ -75,12 +80,13 @@ const pagination = (e) => {
                 })
                 .then(rta => {
                     const total = rta.data.total
+                    console.log(total)
                     offset = total - ((total % 20))
-                    return fetchMarvel(offset)
+                    return filter(offset)
                 })
         default:
             offset = 0;
-            return fetchMarvel(offset)
+            return filter(offset)
     }
 
 }
@@ -125,26 +131,43 @@ const disableButtons = (offset, total) => {
 
 const filter = () => {
     //e.preventDefault();
+    const title = searchInput.value
+    const type = searchType.value
     const sort = sortSsearch.value
-
-    return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&${sort}`)
+    
+    if (type === 'comics') {
+        fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}&${sort}&titleStartsWith=${title || 'a' }`)
+        .then((response) => {
+            return response.json()
+        })
+         .then(rta => {
+             const results = rta.data.results
+             const total = rta.data.total
+             displayComics(results, offset)
+             resultsCounter(total)
+             disableButtons(offset, total)
+             
+         })
+        
+    } else if (type === 'characters') {
+        fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}&nameStartsWith=${title}`)
     .then((response) => {
-        return response.json()
+       return response.json()
+   })
+    .then(rta => {
+        const results = rta.data.results
+        const total = rta.data.total
+        displayCharacters(results, offset)
+        resultsCounter(total)
+        disableButtons(offset, total)
     })
-        .then(rta => {
-        const results = rta.data.results 
-        offset = 0
-        displayComics(results, offset)
-    })
-//console.log(sort)
-
+    
+    }
+    
 }
 
-//filter()
-//searchForm.addEventListener('submit', filter)
+searchBtn.addEventListener('click', filter)
 
-//const searchForm = document.getElementById('searchForm')
-//const searchBtn = document.getElementById('search__button')
 
 //SETEAR PARAMS
 const setHomeParams = () => {
@@ -164,54 +187,6 @@ const setHomeParams = () => {
 //searchBtn.addEventListener('submit', setHomeParams)
 //searchType.addEventListener('change', setHomeParams)
 
-
-//filtros posibles
-// const typeOpFilter = (obj, filterType) => {
-   
-//       return obj.filter(
-//         item => item.type === filterType
-    
-//       )};
-  
-
-// const sortDate = (obj1, obj2) => {
-//     if (obj1.date > obj2.date) {
-//         return 1
-//     }
-//     if (obj1.date < obj2.date) {
-//         return -1;
-//     }
-    
-//     return 0;
-// };
-
-
-// const sortAZ = (obj1, obj2) => {
-//     if (obj1.title > obj2.title || obj1.name > obj2.name) {
-//       return 1
-//     }
-//     if (obj1.title < obj2.title || obj1.name > obj2.name) {
-//       return -1;
-//     }
-   
-//     return 0;
-// }
-  
-// const allSort = (obj, sortType) => {
-//     switch(sortType){
-//     //   case "older":
-//     //     return obj.sort((obj1, obj2) => { return sortDate(obj1, obj2) });
-//     //   case "newer":
-//     //     return obj.sort((obj1, obj2) => { return sortDate(obj2, obj1) });
-//       case "AZ":
-//         return obj.sort((obj1, obj2) => { return sortAZ(obj1, obj2) });
-//       case "ZA":
-//         return obj.sort((obj1, obj2) => { return sortAZ(obj2, obj1) });
-//       default:
-//         return obj
-//     }
-// };
-  
 
 //paginado anterior
 // const pagination = (e) => {
