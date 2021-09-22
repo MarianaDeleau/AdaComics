@@ -20,8 +20,6 @@ const btnEnd = document.getElementById('btnEnd')
 const btnNextPage = document.getElementById('nextPage')
 
 
-
-
 //FUNCION PARA CREAR NODOS
 
     const createNode = (tag, attr, ...children) => {
@@ -61,7 +59,8 @@ const pagination = (e) => {
     
     const selected = e.target
     const page = selected.value
-    const typeValue = searchType.value
+    const title = searchInput.value
+    const type = searchType.value
 
     switch (page) {
         case "start":
@@ -74,21 +73,33 @@ const pagination = (e) => {
             offset += 20
             return filter(offset)
         case "end":
-            return fetch(`${BASE_URL}/${typeValue}?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-                .then((response) => {
-                    return response.json()
-                })
-                .then(rta => {
-                    const total = rta.data.total
-                    console.log(total)
-                    offset = total - ((total % 20))
-                    return filter(offset)
-                })
+            if (type === 'comics') {
+                return fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&titleStartsWith=${title || 'a'}`)
+                    .then((response) => {
+                        return response.json()
+                    })
+                    .then(rta => {
+                        const total = rta.data.total
+                        console.log(total)
+                        offset = total - ((total % 20))
+                        return filter(offset)
+                    })
+            } else if (type === 'characters') {
+                return fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&nameStartsWith=${title || 'a'}`)
+                    .then((response) => {
+                        return response.json()
+                    })
+                    .then(rta => {
+                                const total = rta.data.total
+                                console.log(total)
+                                offset = total - ((total % 20))
+                                return filter(offset)
+                            })
+                    }
         default:
             offset = 0;
             return filter(offset)
     }
-
 }
 
 btnStart.addEventListener('click', pagination)
@@ -150,7 +161,7 @@ const filter = () => {
          })
         
     } else if (type === 'characters') {
-        fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}&nameStartsWith=${title}`)
+        fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}&nameStartsWith=${title || 'a'}`)
     .then((response) => {
        return response.json()
    })
@@ -186,67 +197,3 @@ const setHomeParams = () => {
 
 //searchBtn.addEventListener('submit', setHomeParams)
 //searchType.addEventListener('change', setHomeParams)
-
-
-//paginado anterior
-// const pagination = (e) => {
-    
-//         const selected = e.target
-//     const page = selected.value
-//     const typeValue = searchType.value
-//     console.log(typeValue)
-//     if (typeValue === 'comics') {
-//         switch (page) {
-//             case "start":
-//                 offset = 0;
-//                 return fetchComics(offset)
-//             case "previousPage":
-//                 offset -= 20
-//                 return fetchComics(offset)
-//             case "nextPage":
-//                 offset += 20
-//                 return fetchComics(offset)
-//             case "end":
-//                 return fetch(`${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-//                     .then((response) => {
-//                         return response.json()
-//                     })
-//                     .then(rta => {
-//                         const total = rta.data.total
-//                         offset = total - ((total % 20))
-//                         return fetchComics(offset)
-//                     })
-//             default:
-//                 offset = 0;
-//                 return fetchComics(offset)
-//         }
-    
-//     } else if (typeValue === 'characters') {
-
-//     switch (page) {        
-//         case "start":
-//                 offset = 0;        
-//                 return fetchCharacter(offset)
-//         case "previousPage":
-//                 offset -= 20
-//                return fetchCharacter(offset)
-//         case "nextPage":
-//                 offset += 20
-//                 return fetchCharacter(offset)
-//         case "end":
-//                 return fetch(`${BASE_URL}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`)
-//                 .then((response) => {
-//                     return response.json()
-//                 })
-//                 .then(rta => {
-//                     const total = rta.data.total
-//                     offset = total - ((total % 20))
-//                     return fetchCharacter(offset)
-//                 })
-//         default:
-//             offset = 0;
-//             return fetchCharacter(offset)
-//         }
-//     }
-
-// }
