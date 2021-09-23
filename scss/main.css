@@ -103,7 +103,7 @@
 .image__header {
   width: 100%;
   height: 400px;
-  background-image: url(../../assets/images/heroes.png.png);
+  background-image: url(../../assets/images/heroes.png);
   background-size: cover;
   margin-bottom: 30px;
 }
