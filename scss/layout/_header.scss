@@ -27,7 +27,10 @@
   height: 400px;
   //background-image: url(https://i2.wp.com/codigoespagueti.com/wp-content/uploads/2021/08/Marvel-Comics-celebras-al-MCU-con-una-serie-de-portadas-variantes-dedicadas-a-la-Saga-del-Infinito-compressed.jpg?fit=1280%2C720&quality=80&ssl=1/Universo_Marvel.png);
   //background-image: url(../../assets/images/pngwing.com.png);
-  background-image: url(../../assets/images/heroes.png);
+ // background-image: url(http://cdn.shopify.com/s/files/1/0122/4969/4272/collections/marvel-heroes_1200x1200.jpg?v=1566137393);
+  background-image: url(https://dam.smashmexico.com.mx/wp-content/uploads/2018/12/marvel-legacy-portadas-smash-.jpg);
   background-size: cover;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  image-rendering: optimizeQuality;
+  filter: brightness(80%);
 }
