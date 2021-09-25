@@ -67,6 +67,36 @@ var disableButtons = function (offset, total) {
         btnNextPage.style.backgroundColor = '#FF0000';
     }
 };
+//CAPTURAR QUERY PARAMS
+var getParams = function () {
+    var params = new URLSearchParams(window.location.search);
+    var type = params.get('search__type') || 'comics';
+    var sort = params.get('sort__search') || '';
+    var input = params.get('search__input');
+    var page = Number(params.get('page')) || '1';
+    return { type: type, sort: sort, input: input, page: page };
+};
+//PETICION MARVEL
+var fetchMarvel = function (offset, url, type) {
+    fetch(url)
+        .then(function (response) {
+        return response.json();
+    })
+        .then(function (rta) {
+        var results = rta.data.results;
+        var total = rta.data.total;
+        if (type === 'comics') {
+            displayComics(results, offset);
+        }
+        else if (type === 'characters') {
+            displayCharacters(results, offset);
+        }
+        resultsCounter(total);
+        disableButtons(offset, total);
+        var lastButton = document.getElementById("btnEnd");
+        lastButton.dataset.lastpage = Math.round(total / rta.data.limit).toString();
+    });
+};
 //FILTROS A TRAVES DE QUERY PARAMS
 var handleSearchSubmit = function (event) {
     event.preventDefault();
@@ -133,3 +163,15 @@ var changeSelect = function () {
     }
 };
 searchType.addEventListener('change', changeSelect);
+//INCIO PAGINA
+var init = function () {
+    var _a = getParams(), type = _a.type, input = _a.input, sort = _a.sort, page = _a.page;
+    offset = page * 20 - 20;
+    var url = BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&orderBy=" + sort + "&offset=" + offset;
+    if (input) {
+        url += inputToSearch(type, input);
+    }
+    fetchMarvel(offset, url, type);
+    changeSelect();
+};
+init();

@@ -18,6 +18,7 @@ const btnEnd = document.getElementById('btnEnd')
 const btnNextPage = document.getElementById('nextPage')
 
 
+
 //FUNCION PARA CREAR NODOS
     const createNode = (tag, attr, ...children) => {
         const elem = document.createElement(tag);
@@ -76,6 +77,43 @@ const disableButtons = (offset, total) => {
     }
 
 }
+//CAPTURAR QUERY PARAMS
+const getParams =  () => {
+    const params = new URLSearchParams(window.location.search)
+
+    let type = params.get('search__type') || 'comics';
+    let sort = params.get('sort__search') || '';
+    let input = params.get('search__input');
+    let page = Number(params.get('page')) || '1'
+   
+    return {type, sort, input, page}
+
+  }
+
+  //PETICION MARVEL
+const fetchMarvel = (offset, url, type) => {
+    fetch(url)
+        .then((response) => {
+            return response.json()
+        })
+         .then(rta => {
+             const results = rta.data.results
+             const total = rta.data.total
+             if (type === 'comics') {
+                displayComics(results, offset)
+             } else if (type === 'characters') {
+                displayCharacters(results, offset)
+             }
+             resultsCounter(total)
+             disableButtons(offset, total)
+             
+             const lastButton = document.getElementById("btnEnd");
+             lastButton.dataset.lastpage = Math.round(total / rta.data.limit).toString();
+       
+         })
+}
+
+
 
 //FILTROS A TRAVES DE QUERY PARAMS
 const handleSearchSubmit = (event) => {
@@ -162,3 +200,20 @@ const changeSelect = () => {
 }
       
 searchType.addEventListener('change', changeSelect)
+
+//INCIO PAGINA
+const init = () => {   
+    const { type, input, sort, page } = getParams()
+    
+    offset = page * 20 - 20
+    
+    let url = `${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&orderBy=${sort}&offset=${offset}`
+
+    if (input) {
+        url += inputToSearch(type, input)
+    }
+    fetchMarvel(offset, url, type)
+    changeSelect()
+}
+
+init();
