@@ -4,10 +4,10 @@ var HASH = '5e2b4e7a9678fe99d5424aad34d696f1';
 var offset = 0;
 var resultCounter = 0;
 var params = new URLSearchParams(window.location.search);
-//const searchForm = document.getElementById('searchForm');
+var searchForm = document.getElementById('searchForm');
 var searchInput = document.getElementById('search__input');
 var searchType = document.getElementById('search__type');
-var sortSsearch = document.getElementById('sort__search');
+var sortSearch = document.getElementById('sort__search');
 var searchBtn = document.getElementById('search__button');
 var btnStart = document.getElementById('btnStart');
 var btnPreviousPage = document.getElementById('previousPage');
@@ -45,46 +45,35 @@ var resultsCounter = function (total) {
 var pagination = function (e) {
     var selected = e.target;
     var page = selected.value;
-    var title = searchInput.value;
-    var type = searchType.value;
     switch (page) {
         case "start":
             offset = 0;
-            return filter(offset);
+            urlToFetch = getParams(offset);
+            return fetchMarvel(offset, urlToFetch);
         case "previousPage":
             offset -= 20;
-            return filter(offset);
+            urlToFetch = getParams(offset);
+            return fetchMarvel(offset, urlToFetch);
         case "nextPage":
             offset += 20;
-            return filter(offset);
+            urlToFetch = getParams(offset);
+            return fetchMarvel(offset, urlToFetch);
         case "end":
-            if (type === 'comics') {
-                return fetch(BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&titleStartsWith=" + (title || 'a'))
-                    .then(function (response) {
-                    return response.json();
-                })
-                    .then(function (rta) {
-                    var total = rta.data.total;
-                    console.log(total);
-                    offset = total - ((total % 20));
-                    return filter(offset);
-                });
-            }
-            else if (type === 'characters') {
-                return fetch(BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&nameStartsWith=" + (title || 'a'))
-                    .then(function (response) {
-                    return response.json();
-                })
-                    .then(function (rta) {
-                    var total = rta.data.total;
-                    console.log(total);
-                    offset = total - ((total % 20));
-                    return filter(offset);
-                });
-            }
+            return fetch(getParams(0))
+                .then(function (response) {
+                return response.json();
+            })
+                .then(function (rta) {
+                var total = rta.data.total;
+                console.log(total);
+                offset = total - ((total % 20));
+                urlToFetch = getParams(offset);
+                return fetchMarvel(offset, urlToFetch);
+            });
         default:
             offset = 0;
-            return filter(offset);
+            urlToFetch = getParams(offset);
+            return fetchMarvel(offset, urlToFetch);
     }
 };
 btnStart.addEventListener('click', pagination);
@@ -121,50 +110,49 @@ var disableButtons = function (offset, total) {
 };
 //FILTROS
 var filter = function () {
-    //e.preventDefault();
-    var title = searchInput.value;
-    var type = searchType.value;
-    var sort = sortSsearch.value;
-    if (type === 'comics') {
-        fetch(BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&offset=" + offset + "&" + sort + "&titleStartsWith=" + (title || 'a'))
-            .then(function (response) {
-            return response.json();
-        })
-            .then(function (rta) {
-            var results = rta.data.results;
-            var total = rta.data.total;
-            displayComics(results, offset);
-            resultsCounter(total);
-            disableButtons(offset, total);
-        });
-    }
-    else if (type === 'characters') {
-        fetch(BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&offset=" + offset + "&nameStartsWith=" + (title || 'a'))
-            .then(function (response) {
-            return response.json();
-        })
-            .then(function (rta) {
-            var results = rta.data.results;
-            var total = rta.data.total;
-            displayCharacters(results, offset);
-            resultsCounter(total);
-            disableButtons(offset, total);
-        });
-    }
+    fetchMarvel(0, getParams(0));
 };
 searchBtn.addEventListener('click', filter);
 //SETEAR PARAMS
-var setHomeParams = function () {
+var setParams = function () {
     //e.preventDefault();
-    // const searchInput = document.getElementById('search__input');
-    // const searchType = document.getElementById('search__type');
-    // const sortSearch = document.getElementById('sort__search');
-    // // params.set('search', searchInput.value)
-    // // params.set('type', searchType.value)
-    // // params.set('sort', sortSearch.value)
-    //console.log(params)
-    //window.location.href = `${window.location.pathname}?${params.toString()}`
-    window.location.href = window.location.pathname + "?";
+    params.set('titleStartsWith', searchInput.value);
+    params.set('type', searchType.value);
+    params.set('orderBy', sortSearch.value);
+    params.set('page', '99');
+    params.set('offset', offset);
+    window.location.href = window.location.pathname + "?" + params.toString();
 };
-//searchBtn.addEventListener('submit', setHomeParams)
-//searchType.addEventListener('change', setHomeParams)
+console.log(window.location.href);
+//searchBtn.addEventListener('click', setParams)
+var getSortValue = function () {
+    var sort = sortSearch.value;
+    var sortToSearch = '';
+    switch (sort) {
+        case "orderBy=title":
+            sortToSearch = searchType.value === 'comics' ? "orderBy=title" : "orderBy=name";
+            return sortToSearch;
+        case "orderBy=-title":
+            sortToSearch = searchType.value === 'comics' ? "orderBy=-title" : "orderBy=-name";
+            return sortToSearch;
+        case "orderBy=-onsaleDate":
+            sortToSearch = searchType.value === 'comics' ? "orderBy=-onsaleDate" : "orderBy=-modified";
+            return sortToSearch;
+        case "orderBy=onsaleDate":
+            sortToSearch = searchType.value === 'comics' ? "orderBy=onsaleDate" : "orderBy=modified";
+        default:
+            return sortToSearch;
+    }
+};
+var inputToSearch = function (type, input) {
+    var wordToSearch = '';
+    if (input) {
+        if (type === 'comics') {
+            wordToSearch += "&titleStartsWith=" + input;
+        }
+        else if (type === 'characters') {
+            wordToSearch += "&nameStartsWith=" + input;
+        }
+    }
+    return wordToSearch;
+};

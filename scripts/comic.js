@@ -1,36 +1,47 @@
-//PETICION COMICS
-var urlComic = BASE_URL + "/comics?ts=1&apikey=" + API_KEY + "&hash=" + HASH;
-var fetchMarvel = function (offset) {
-    var type = searchType.value;
-    var sort = sortSsearch.value;
-    if (type === 'comics') {
-        fetch(BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&offset=" + offset + "&" + sort)
-            .then(function (response) {
-            return response.json();
-        })
-            .then(function (rta) {
-            var results = rta.data.results;
-            var total = rta.data.total;
-            displayComics(results, offset);
-            resultsCounter(total);
-            disableButtons(offset, total);
-        });
+//PETICION
+var urlToFetch = '';
+var getParams = function (offset) {
+    var params = new URLSearchParams(window.location.search);
+    var type = params.get('type') ? params.get('type') : searchType.value;
+    var sort = params.get('orderBy') ? params.get('orderBy') : getSortValue();
+    var input = searchInput.value;
+    offset = params.get('offset') ? params.get('offset') : offset;
+    urlToFetch = BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&offset=" + offset + "&" + sort;
+    if (input) {
+        return urlToFetch += inputToSearch(type, input);
     }
-    else if (type === 'characters') {
-        fetch(BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&offset=" + offset)
-            .then(function (response) {
-            return response.json();
-        })
-            .then(function (rta) {
-            var results = rta.data.results;
-            var total = rta.data.total;
-            displayCharacters(results, offset);
-            resultsCounter(total);
-            disableButtons(offset, total);
-        });
+    else {
+        return urlToFetch += '';
     }
+    //ADRI
+    //let url = '';
+    // //if (!params.get('page'))
+    // url += params.get('page') || 1
+    // url += params.get('type') || searchType.value;
+    // url += params.get('orderBy') || sortSearch.value;
+    // url += params.get('titleStartsWith') || params.get('nameStartsWith') || searchInput.value;
+    // url += params.get('offset') || 0;
 };
-fetchMarvel(0);
+console.log(urlToFetch);
+var fetchMarvel = function (offset, url) {
+    fetch(url)
+        .then(function (response) {
+        return response.json();
+    })
+        .then(function (rta) {
+        var results = rta.data.results;
+        var total = rta.data.total;
+        if (searchType.value === 'comics') {
+            displayComics(results, offset);
+        }
+        else if (searchType.value === 'characters') {
+            displayCharacters(results, offset);
+        }
+        resultsCounter(total);
+        disableButtons(offset, total);
+    });
+};
+fetchMarvel(0, getParams(0));
 //FUNCION DISPLAY GRILLA DE COMICS
 var comics = document.getElementsByClassName("comic__results");
 var displayComics = function (obj, offset) {
@@ -48,6 +59,7 @@ var displayComics = function (obj, offset) {
         }
     });
 };
+//FUNCION DISPLAY COMIC SELECCIONADO
 var displaySelectedComic = function (e) {
     var comicSelectedId = e.target.id;
     var comicSelected = document.getElementById('comicSelected');

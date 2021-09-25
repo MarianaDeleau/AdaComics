@@ -1,43 +1,60 @@
-//PETICION COMICS
+//PETICION
 
-const urlComic: string = `${BASE_URL}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`
+let urlToFetch = ''
+const getParams =  (offset) => {
+    const params = new URLSearchParams(window.location.search)
 
-const fetchMarvel = (offset) => {
+    let type = params.get('type') ? params.get('type') : searchType.value;
+    let sort = params.get('orderBy') ? params.get('orderBy') : getSortValue()
+    let input = searchInput.value;
+    offset = params.get('offset') ? params.get('offset') : offset;
+  
+    urlToFetch = `${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}&${sort}`
+            
+    if (input) {
+       return urlToFetch += inputToSearch(type, input)
+    } else {
+        return urlToFetch += ''
+    }
+   
+    //ADRI
+    //let url = '';
+    // //if (!params.get('page'))
+    // url += params.get('page') || 1
+    // url += params.get('type') || searchType.value;
+    // url += params.get('orderBy') || sortSearch.value;
+    // url += params.get('titleStartsWith') || params.get('nameStartsWith') || searchInput.value;
+    // url += params.get('offset') || 0;
 
-    const type = searchType.value
-    const sort = sortSsearch.value
-    if (type === 'comics') {
-        fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}&${sort}`)
+}
+    console.log(urlToFetch)
+
+
+const fetchMarvel = (offset, url) => {
+    fetch(url)
         .then((response) => {
             return response.json()
         })
          .then(rta => {
              const results = rta.data.results
              const total = rta.data.total
-             displayComics(results, offset)
+             if (searchType.value === 'comics') {
+                 displayComics(results, offset)
+             } else if (searchType.value === 'characters') {
+                displayCharacters(results, offset)
+             }
              resultsCounter(total)
              disableButtons(offset, total)
+       
          })
-        
-    } else if (type === 'characters') {
-        fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}`)
-    .then((response) => {
-       return response.json()
-   })
-    .then(rta => {
-        const results = rta.data.results
-        const total = rta.data.total
-        displayCharacters(results, offset)
-        resultsCounter(total)
-        disableButtons(offset, total)
-    })
-}
 }
 
-fetchMarvel(0)
+fetchMarvel(0, getParams(0))
+
 
 //FUNCION DISPLAY GRILLA DE COMICS
 const comics = document.getElementsByClassName("comic__results");
+
 const displayComics = (obj, offset) => {
 
     const resultsGrid = document.getElementById('resultsGrid')
@@ -59,6 +76,8 @@ const displayComics = (obj, offset) => {
      
   
 }
+
+//FUNCION DISPLAY COMIC SELECCIONADO
 
 const displaySelectedComic = (e) => {
     
@@ -102,7 +121,6 @@ const displaySelectedComic = (e) => {
     }, 2000)
     
 }
-
 
 
 
