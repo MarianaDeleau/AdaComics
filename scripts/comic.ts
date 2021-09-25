@@ -1,36 +1,18 @@
-//PETICION
-
-let urlToFetch = ''
-const getParams =  (offset) => {
+//CAPTURAR QUERY PARAMS
+const getParams =  () => {
     const params = new URLSearchParams(window.location.search)
 
-    let type = params.get('type') ? params.get('type') : searchType.value;
-    let sort = params.get('orderBy') ? params.get('orderBy') : getSortValue()
-    let input = searchInput.value;
-    offset = params.get('offset') ? params.get('offset') : offset;
-  
-    urlToFetch = `${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}&${sort}`
-            
-    if (input) {
-       return urlToFetch += inputToSearch(type, input)
-    } else {
-        return urlToFetch += ''
-    }
+    let type = params.get('search__type') || 'comics';
+    let sort = params.get('sort__search') || '';
+    let input = params.get('search__input');
+    let page = Number(params.get('page')) || '1'
    
-    //ADRI
-    //let url = '';
-    // //if (!params.get('page'))
-    // url += params.get('page') || 1
-    // url += params.get('type') || searchType.value;
-    // url += params.get('orderBy') || sortSearch.value;
-    // url += params.get('titleStartsWith') || params.get('nameStartsWith') || searchInput.value;
-    // url += params.get('offset') || 0;
+    return {type, sort, input, page}
 
-}
-    console.log(urlToFetch)
+  }
 
-
-const fetchMarvel = (offset, url) => {
+  //PETICION MARVEL
+const fetchMarvel = (offset, url, type) => {
     fetch(url)
         .then((response) => {
             return response.json()
@@ -38,18 +20,36 @@ const fetchMarvel = (offset, url) => {
          .then(rta => {
              const results = rta.data.results
              const total = rta.data.total
-             if (searchType.value === 'comics') {
-                 displayComics(results, offset)
-             } else if (searchType.value === 'characters') {
+             if (type === 'comics') {
+                displayComics(results, offset)
+             } else if (type === 'characters') {
                 displayCharacters(results, offset)
              }
              resultsCounter(total)
              disableButtons(offset, total)
+             
+             const lastButton = document.getElementById("btnEnd");
+             lastButton.dataset.lastpage = Math.round(total / rta.data.limit).toString();
        
          })
 }
 
-fetchMarvel(0, getParams(0))
+//INCIO PAGINA
+const init = () => {   
+    const { type, input, sort, page } = getParams()
+    
+    offset = page * 20 - 20
+    
+    let url = `${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&orderBy=${sort}&offset=${offset}`
+
+    if (input) {
+        url += inputToSearch(type, input)
+    }
+    fetchMarvel(offset, url, type)
+    changeSelect()
+}
+
+init();
 
 
 //FUNCION DISPLAY GRILLA DE COMICS
@@ -73,29 +73,25 @@ const displayComics = (obj, offset) => {
         }
         
     });  
-     
-  
+
 }
 
 //FUNCION DISPLAY COMIC SELECCIONADO
-
-const displaySelectedComic = (e) => {
+const displaySelectedComic = async (e) => {
     
     const comicSelectedId = e.target.id
     const comicSelected = document.getElementById('comicSelected')
     const resultsSection = document.getElementById('resultsSection')
     console.log(comicSelectedId)
 
-    setTimeout(() => {
-        
-        fetch(`${BASE_URL}/comics/${comicSelectedId}?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+    await fetch(`${BASE_URL}/comics/${comicSelectedId}?ts=1&apikey=${API_KEY}&hash=${HASH}`)
     .then((response) => {
-       
-       return response.json()
-       
-   })
+    
+    return response.json()
+    
+    })
         .then(rta => {
-     
+    
             const selectedComic: Comic = rta.data.results[0]
             
         const comicCover = createNode('img', { src: `${selectedComic.thumbnail.path}.${selectedComic.thumbnail.extension}`, alt: `${selectedComic.title}`, class:"comic__cover" });
@@ -118,7 +114,6 @@ const displaySelectedComic = (e) => {
         comicSelected.appendChild(comicDetail)
             })        
     resultsSection.setAttribute('hidden', 'true')
-    }, 2000)
     
 }
 

@@ -6,8 +6,6 @@ const HASH:string = '5e2b4e7a9678fe99d5424aad34d696f1'
 let offset = 0
 let resultCounter = 0
 
-const params = new URLSearchParams(window.location.search);
-
 const searchForm = document.getElementById('searchForm');
 const searchInput = document.getElementById('search__input');
 const searchType = document.getElementById('search__type');
@@ -21,7 +19,6 @@ const btnNextPage = document.getElementById('nextPage')
 
 
 //FUNCION PARA CREAR NODOS
-
     const createNode = (tag, attr, ...children) => {
         const elem = document.createElement(tag);
     
@@ -43,7 +40,6 @@ const btnNextPage = document.getElementById('nextPage')
 };
 
 //CONTADOR DE RESULTADOS
-
 const resultsCounter = (total) => {
 
     const counter = document.getElementById('resultsCounter');
@@ -52,53 +48,7 @@ const resultsCounter = (total) => {
 
 }
 
-
-//PAGINACION
-
-const pagination = (e) => {
-    
-    const selected = e.target
-    const page = selected.value
-    switch (page) {
-        case "start":
-            offset = 0;
-            urlToFetch = getParams(offset)
-            return fetchMarvel(offset, urlToFetch)
-        case "previousPage":
-            offset -= 20
-            urlToFetch = getParams(offset)
-            return fetchMarvel(offset, urlToFetch)
-        case "nextPage":
-            offset += 20
-            urlToFetch = getParams(offset)
-            return fetchMarvel(offset, urlToFetch)
-        case "end":
-            return fetch(getParams(0))
-                    .then((response) => {
-                        return response.json()
-                    })
-                    .then(rta => {
-                        const total = rta.data.total
-                        console.log(total)
-                        offset = total - ((total % 20))
-                        urlToFetch = getParams(offset)
-                        return fetchMarvel(offset, urlToFetch)
-                    })
-        default:
-            offset = 0
-            urlToFetch = getParams(offset)
-            return fetchMarvel(offset, urlToFetch)
-            }           
-    }    
-
-btnStart.addEventListener('click', pagination)
-btnPreviousPage.addEventListener('click', pagination)
-btnEnd.addEventListener('click', pagination)
-btnNextPage.addEventListener('click', pagination)
-searchType.addEventListener('change', pagination)
-
 //FUNCION PARA DESABILITAR BOTONES DE PAGINADO
-
 const disableButtons = (offset, total) => {
 
     if (offset === 0) {
@@ -127,56 +77,58 @@ const disableButtons = (offset, total) => {
 
 }
 
-//FILTROS
+//FILTROS A TRAVES DE QUERY PARAMS
+const handleSearchSubmit = (event) => {
+    event.preventDefault()
+    const form = event.target;
 
-const filter = () => {
-    fetchMarvel(0, getParams(0))
-}
-   
-searchBtn.addEventListener('click', filter)
+    const params = new URLSearchParams(window.location.search);
 
+    params.set('search__input', form.search__input.value);
+    params.set('search__type', form.search__type.value);
+    params.set('sort__search', form.sort__search.value);
+    params.set('page', '1')
 
-//SETEAR PARAMS
-const setParams = () => {
-    //e.preventDefault();
-
-    params.set('titleStartsWith', searchInput.value)
-    params.set('type', searchType.value)
-    params.set('orderBy', sortSearch.value)
-    params.set('page', '99')
-    params.set('offset', offset)
     window.location.href = `${window.location.pathname}?${params.toString()}`
-    
 }
 
-console.log( window.location.href)
-//searchBtn.addEventListener('click', setParams)
+//PAGINADO A TRAVES DE QUERY PARAMS
+const handlePaginationClick = (event) => {
+    const params = new URLSearchParams(window.location.search);
 
+    let page =  Number(params.get('page'));
 
-
-const getSortValue = () => {
-
-    const sort = sortSearch.value
-    let sortToSearch = '' 
-    switch (sort) {
-        
-        case "orderBy=title":
-            sortToSearch = searchType.value === 'comics' ? "orderBy=title" : "orderBy=name"
-            return sortToSearch
-        case "orderBy=-title":
-        sortToSearch = searchType.value === 'comics' ? "orderBy=-title" : "orderBy=-name"
-            return sortToSearch
-        case "orderBy=-onsaleDate":
-        sortToSearch = searchType.value === 'comics' ? "orderBy=-onsaleDate" : "orderBy=-modified"
-        return sortToSearch
-        case "orderBy=onsaleDate":
-        sortToSearch = searchType.value === 'comics' ? "orderBy=onsaleDate" : "orderBy=modified"
-        default:
-            return sortToSearch
+    if(!page) {
+        params.set('page', '2'); 
+    } else {
+        switch(event.target.value) {
+            case 'start':
+                params.set('page', '1');
+                break;
+            case 'previousPage':
+                params.set('page', page - 1)
+                break;
+            case 'nextPage':
+                params.set('page', page + 1)
+                break;
+            case 'end':
+                params.set('page', event.target.dataset.lastpage);
+                break;
+            default: break;
+        }
     }
 
+    window.location.href = `${window.location.pathname}?${params.toString()}`
 }
 
+searchForm.addEventListener('submit', handleSearchSubmit);
+btnStart.addEventListener('click', handlePaginationClick)
+btnPreviousPage.addEventListener('click', handlePaginationClick)
+btnEnd.addEventListener('click', handlePaginationClick)
+btnNextPage.addEventListener('click', handlePaginationClick)
+
+
+//FUNCION PARA DEFINIR STRING PARA FETCH SEGUN TIPO
 const inputToSearch = (type, input) => {
 
     let wordToSearch = '' 
@@ -190,3 +142,23 @@ const inputToSearch = (type, input) => {
     }
     return wordToSearch
 }
+
+//FUNCION PARA ACTUALIZAR SELECT SEGUN TIPO 
+//   #### MEJORAR CON CREATE NODE ###
+const changeSelect = () => {
+    
+        if (searchType.value === 'comics') {
+            sortSearch.innerHTML = `                  
+            <option value="title">A-Z</option>
+            <option value="-title">Z-A</option>
+            <option value="-focDate">Más nuevos</option>
+            <option value="focDate">Más viejos</option>`
+        }
+        if (searchType.value === 'characters') {
+            sortSearch.innerHTML = `                  
+            <option value="name">A-Z</option>
+            <option value="-name">Z-A</option> `
+        }
+}
+      
+searchType.addEventListener('change', changeSelect)

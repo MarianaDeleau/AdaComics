@@ -1,5 +1,4 @@
 //FUNCION DISPLAY GRILLA DE PERSONAJES
-
 const characters = document.getElementsByClassName("character__results");
 const displayCharacters = (obj, offset) => {
 
@@ -23,17 +22,14 @@ const displayCharacters = (obj, offset) => {
 
 
 //FUNCION DISPLAY SECCION PERSONAJE
-
-const displaySelectedCharacter = (e) => {
+const displaySelectedCharacter = async (e) => {
 
     const characterSelectedId = e.target.id
     const characterSelected = document.getElementById('characterSelected');
     const resultsSection = document.getElementById('resultsSection')
     console.log(characterSelectedId)
 
-    setTimeout(() => {
-        
-        fetch(`${BASE_URL}/characters/${characterSelectedId}?ts=1&apikey=${API_KEY}&hash=${HASH}`)
+    await fetch(`${BASE_URL}/characters/${characterSelectedId}?ts=1&apikey=${API_KEY}&hash=${HASH}`)
 
             .then((response) => {
        
@@ -53,9 +49,5 @@ const displaySelectedCharacter = (e) => {
             })
         
             resultsSection.setAttribute('hidden', 'true')
-    }, 2000)
-    
+
 }
-
-
-
