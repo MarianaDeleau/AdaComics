@@ -94,7 +94,7 @@ var fetchMarvel = function (offset, url, type) {
         resultsCounter(total);
         disableButtons(offset, total);
         var lastButton = document.getElementById("btnEnd");
-        lastButton.dataset.lastpage = Math.round(total / rta.data.limit).toString();
+        lastButton.dataset.lastpage = Math.ceil(total / rta.data.limit).toString();
     });
 };
 //FILTROS A TRAVES DE QUERY PARAMS
@@ -156,10 +156,22 @@ var inputToSearch = function (type, input) {
 //   #### MEJORAR CON CREATE NODE ###
 var changeSelect = function () {
     if (searchType.value === 'comics') {
-        sortSearch.innerHTML = "                  \n            <option value=\"title\">A-Z</option>\n            <option value=\"-title\">Z-A</option>\n            <option value=\"-focDate\">M\u00E1s nuevos</option>\n            <option value=\"focDate\">M\u00E1s viejos</option>";
+        sortSearch.innerHTML = '';
+        var option1 = createNode('option', { value: 'title' }, document.createTextNode('A-Z'));
+        var option2 = createNode('option', { value: '-title' }, document.createTextNode('Z-A'));
+        var option3 = createNode('option', { value: '-focDate' }, document.createTextNode('Más nuevos'));
+        var option4 = createNode('option', { value: 'focDate' }, document.createTextNode('Más viejos'));
+        sortSearch.appendChild(option1);
+        sortSearch.appendChild(option2);
+        sortSearch.appendChild(option3);
+        sortSearch.appendChild(option4);
     }
     if (searchType.value === 'characters') {
-        sortSearch.innerHTML = "                  \n            <option value=\"name\">A-Z</option>\n            <option value=\"-name\">Z-A</option> ";
+        sortSearch.innerHTML = '';
+        var option1 = createNode('option', { value: 'name' }, document.createTextNode('A-Z'));
+        var option2 = createNode('option', { value: '-name' }, document.createTextNode('Z-A'));
+        sortSearch.appendChild(option1);
+        sortSearch.appendChild(option2);
     }
 };
 searchType.addEventListener('change', changeSelect);

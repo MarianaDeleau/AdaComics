@@ -108,7 +108,7 @@ const fetchMarvel = (offset, url, type) => {
              disableButtons(offset, total)
              
              const lastButton = document.getElementById("btnEnd");
-             lastButton.dataset.lastpage = Math.round(total / rta.data.limit).toString();
+             lastButton.dataset.lastpage = Math.ceil(total / rta.data.limit).toString();
        
          })
 }
@@ -185,17 +185,23 @@ const inputToSearch = (type, input) => {
 //   #### MEJORAR CON CREATE NODE ###
 const changeSelect = () => {
     
-        if (searchType.value === 'comics') {
-            sortSearch.innerHTML = `                  
-            <option value="title">A-Z</option>
-            <option value="-title">Z-A</option>
-            <option value="-focDate">Más nuevos</option>
-            <option value="focDate">Más viejos</option>`
+    if (searchType.value === 'comics') {
+        sortSearch.innerHTML = ''
+        const option1 = createNode('option', { value: 'title' }, document.createTextNode('A-Z'))
+        const option2 = createNode('option', { value: '-title' }, document.createTextNode('Z-A'))
+        const option3 = createNode('option', { value: '-focDate' }, document.createTextNode('Más nuevos'))
+        const option4 = createNode('option', { value: 'focDate' }, document.createTextNode('Más viejos'))
+        sortSearch.appendChild(option1)
+        sortSearch.appendChild(option2)
+        sortSearch.appendChild(option3)
+        sortSearch.appendChild(option4)
         }
-        if (searchType.value === 'characters') {
-            sortSearch.innerHTML = `                  
-            <option value="name">A-Z</option>
-            <option value="-name">Z-A</option> `
+    if (searchType.value === 'characters') {
+            sortSearch.innerHTML = ''
+            const option1 = createNode('option', { value: 'name' }, document.createTextNode('A-Z'))
+            const option2 = createNode('option', { value: '-name' }, document.createTextNode('Z-A'))
+            sortSearch.appendChild(option1)
+            sortSearch.appendChild(option2)
         }
 }
       
