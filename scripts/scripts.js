@@ -3,7 +3,6 @@ var BASE_URL = 'https://gateway.marvel.com/v1/public';
 var HASH = '5e2b4e7a9678fe99d5424aad34d696f1';
 var offset = 0;
 var resultCounter = 0;
-var params = new URLSearchParams(window.location.search);
 var searchForm = document.getElementById('searchForm');
 var searchInput = document.getElementById('search__input');
 var searchType = document.getElementById('search__type');
@@ -41,46 +40,6 @@ var resultsCounter = function (total) {
     var counter = document.getElementById('resultsCounter');
     counter.innerHTML = total;
 };
-//PAGINACION
-var pagination = function (e) {
-    var selected = e.target;
-    var page = selected.value;
-    switch (page) {
-        case "start":
-            offset = 0;
-            urlToFetch = getParams(offset);
-            return fetchMarvel(offset, urlToFetch);
-        case "previousPage":
-            offset -= 20;
-            urlToFetch = getParams(offset);
-            return fetchMarvel(offset, urlToFetch);
-        case "nextPage":
-            offset += 20;
-            urlToFetch = getParams(offset);
-            return fetchMarvel(offset, urlToFetch);
-        case "end":
-            return fetch(getParams(0))
-                .then(function (response) {
-                return response.json();
-            })
-                .then(function (rta) {
-                var total = rta.data.total;
-                console.log(total);
-                offset = total - ((total % 20));
-                urlToFetch = getParams(offset);
-                return fetchMarvel(offset, urlToFetch);
-            });
-        default:
-            offset = 0;
-            urlToFetch = getParams(offset);
-            return fetchMarvel(offset, urlToFetch);
-    }
-};
-btnStart.addEventListener('click', pagination);
-btnPreviousPage.addEventListener('click', pagination);
-btnEnd.addEventListener('click', pagination);
-btnNextPage.addEventListener('click', pagination);
-searchType.addEventListener('change', pagination);
 //FUNCION PARA DESABILITAR BOTONES DE PAGINADO
 var disableButtons = function (offset, total) {
     if (offset === 0) {
@@ -108,42 +67,49 @@ var disableButtons = function (offset, total) {
         btnNextPage.style.backgroundColor = '#FF0000';
     }
 };
-//FILTROS
-var filter = function () {
-    fetchMarvel(0, getParams(0));
-};
-searchBtn.addEventListener('click', filter);
-//SETEAR PARAMS
-var setParams = function () {
-    //e.preventDefault();
-    params.set('titleStartsWith', searchInput.value);
-    params.set('type', searchType.value);
-    params.set('orderBy', sortSearch.value);
-    params.set('page', '99');
-    params.set('offset', offset);
+//FILTROS A TRAVES DE QUERY PARAMS
+var handleSearchSubmit = function (event) {
+    event.preventDefault();
+    var form = event.target;
+    var params = new URLSearchParams(window.location.search);
+    params.set('search__input', form.search__input.value);
+    params.set('search__type', form.search__type.value);
+    params.set('sort__search', form.sort__search.value);
+    params.set('page', '1');
     window.location.href = window.location.pathname + "?" + params.toString();
 };
-console.log(window.location.href);
-//searchBtn.addEventListener('click', setParams)
-var getSortValue = function () {
-    var sort = sortSearch.value;
-    var sortToSearch = '';
-    switch (sort) {
-        case "orderBy=title":
-            sortToSearch = searchType.value === 'comics' ? "orderBy=title" : "orderBy=name";
-            return sortToSearch;
-        case "orderBy=-title":
-            sortToSearch = searchType.value === 'comics' ? "orderBy=-title" : "orderBy=-name";
-            return sortToSearch;
-        case "orderBy=-onsaleDate":
-            sortToSearch = searchType.value === 'comics' ? "orderBy=-onsaleDate" : "orderBy=-modified";
-            return sortToSearch;
-        case "orderBy=onsaleDate":
-            sortToSearch = searchType.value === 'comics' ? "orderBy=onsaleDate" : "orderBy=modified";
-        default:
-            return sortToSearch;
+//PAGINADO A TRAVES DE QUERY PARAMS
+var handlePaginationClick = function (event) {
+    var params = new URLSearchParams(window.location.search);
+    var page = Number(params.get('page'));
+    if (!page) {
+        params.set('page', '2');
     }
+    else {
+        switch (event.target.value) {
+            case 'start':
+                params.set('page', '1');
+                break;
+            case 'previousPage':
+                params.set('page', page - 1);
+                break;
+            case 'nextPage':
+                params.set('page', page + 1);
+                break;
+            case 'end':
+                params.set('page', event.target.dataset.lastpage);
+                break;
+            default: break;
+        }
+    }
+    window.location.href = window.location.pathname + "?" + params.toString();
 };
+searchForm.addEventListener('submit', handleSearchSubmit);
+btnStart.addEventListener('click', handlePaginationClick);
+btnPreviousPage.addEventListener('click', handlePaginationClick);
+btnEnd.addEventListener('click', handlePaginationClick);
+btnNextPage.addEventListener('click', handlePaginationClick);
+//FUNCION PARA DEFINIR STRING PARA FETCH SEGUN TIPO
 var inputToSearch = function (type, input) {
     var wordToSearch = '';
     if (input) {
@@ -156,3 +122,14 @@ var inputToSearch = function (type, input) {
     }
     return wordToSearch;
 };
+//FUNCION PARA ACTUALIZAR SELECT SEGUN TIPO 
+//   #### MEJORAR CON CREATE NODE ###
+var changeSelect = function () {
+    if (searchType.value === 'comics') {
+        sortSearch.innerHTML = "                  \n            <option value=\"title\">A-Z</option>\n            <option value=\"-title\">Z-A</option>\n            <option value=\"-focDate\">M\u00E1s nuevos</option>\n            <option value=\"focDate\">M\u00E1s viejos</option>";
+    }
+    if (searchType.value === 'characters') {
+        sortSearch.innerHTML = "                  \n            <option value=\"name\">A-Z</option>\n            <option value=\"-name\">Z-A</option> ";
+    }
+};
+searchType.addEventListener('change', changeSelect);

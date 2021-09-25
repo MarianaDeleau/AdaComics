@@ -3,6 +3,7 @@
   border: transparent;
   border-bottom: 2px solid #000;
   font-size: 22px;
+  margin-left: 20px;
 }
 
 .input:focus {
@@ -21,4 +22,7 @@
   font-weight: 600;
   margin-right: 8px;
   margin-left: 15px;
+}
+.fa-search{
+  align-self: center;
 }
