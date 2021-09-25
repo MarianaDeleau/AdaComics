@@ -8,10 +8,10 @@ let resultCounter = 0
 
 const params = new URLSearchParams(window.location.search);
 
-//const searchForm = document.getElementById('searchForm');
+const searchForm = document.getElementById('searchForm');
 const searchInput = document.getElementById('search__input');
 const searchType = document.getElementById('search__type');
-const sortSsearch = document.getElementById('sort__search');
+const sortSearch = document.getElementById('sort__search');
 
 const searchBtn = document.getElementById('search__button')
 const btnStart = document.getElementById('btnStart')
@@ -52,29 +52,28 @@ const resultsCounter = (total) => {
 
 }
 
-//PAGINACION
 
+//PAGINACION
 
 const pagination = (e) => {
     
     const selected = e.target
     const page = selected.value
-    const title = searchInput.value
-    const type = searchType.value
-
     switch (page) {
         case "start":
             offset = 0;
-            return filter(offset)
+            urlToFetch = getParams(offset)
+            return fetchMarvel(offset, urlToFetch)
         case "previousPage":
             offset -= 20
-            return filter(offset)
+            urlToFetch = getParams(offset)
+            return fetchMarvel(offset, urlToFetch)
         case "nextPage":
             offset += 20
-            return filter(offset)
+            urlToFetch = getParams(offset)
+            return fetchMarvel(offset, urlToFetch)
         case "end":
-            if (type === 'comics') {
-                return fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&titleStartsWith=${title || 'a'}`)
+            return fetch(getParams(0))
                     .then((response) => {
                         return response.json()
                     })
@@ -82,25 +81,15 @@ const pagination = (e) => {
                         const total = rta.data.total
                         console.log(total)
                         offset = total - ((total % 20))
-                        return filter(offset)
+                        urlToFetch = getParams(offset)
+                        return fetchMarvel(offset, urlToFetch)
                     })
-            } else if (type === 'characters') {
-                return fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&nameStartsWith=${title || 'a'}`)
-                    .then((response) => {
-                        return response.json()
-                    })
-                    .then(rta => {
-                                const total = rta.data.total
-                                console.log(total)
-                                offset = total - ((total % 20))
-                                return filter(offset)
-                            })
-                    }
         default:
-            offset = 0;
-            return filter(offset)
-    }
-}
+            offset = 0
+            urlToFetch = getParams(offset)
+            return fetchMarvel(offset, urlToFetch)
+            }           
+    }    
 
 btnStart.addEventListener('click', pagination)
 btnPreviousPage.addEventListener('click', pagination)
@@ -141,59 +130,63 @@ const disableButtons = (offset, total) => {
 //FILTROS
 
 const filter = () => {
-    //e.preventDefault();
-    const title = searchInput.value
-    const type = searchType.value
-    const sort = sortSsearch.value
-    
-    if (type === 'comics') {
-        fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}&${sort}&titleStartsWith=${title || 'a' }`)
-        .then((response) => {
-            return response.json()
-        })
-         .then(rta => {
-             const results = rta.data.results
-             const total = rta.data.total
-             displayComics(results, offset)
-             resultsCounter(total)
-             disableButtons(offset, total)
-             
-         })
-        
-    } else if (type === 'characters') {
-        fetch(`${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&offset=${offset}&nameStartsWith=${title || 'a'}`)
-    .then((response) => {
-       return response.json()
-   })
-    .then(rta => {
-        const results = rta.data.results
-        const total = rta.data.total
-        displayCharacters(results, offset)
-        resultsCounter(total)
-        disableButtons(offset, total)
-    })
-    
-    }
-    
+    fetchMarvel(0, getParams(0))
 }
-
+   
 searchBtn.addEventListener('click', filter)
 
 
 //SETEAR PARAMS
-const setHomeParams = () => {
+const setParams = () => {
     //e.preventDefault();
-    // const searchInput = document.getElementById('search__input');
-    // const searchType = document.getElementById('search__type');
-    // const sortSearch = document.getElementById('sort__search');
 
-    // // params.set('search', searchInput.value)
-    // // params.set('type', searchType.value)
-    // // params.set('sort', sortSearch.value)
-    //console.log(params)
-    //window.location.href = `${window.location.pathname}?${params.toString()}`
-    window.location.href = `${window.location.pathname}?`
+    params.set('titleStartsWith', searchInput.value)
+    params.set('type', searchType.value)
+    params.set('orderBy', sortSearch.value)
+    params.set('page', '99')
+    params.set('offset', offset)
+    window.location.href = `${window.location.pathname}?${params.toString()}`
+    
 }
 
-//searchBtn.addEventListener('submit', setHomeParams)
-//searchType.addEventListener('change', setHomeParams)
+console.log( window.location.href)
+//searchBtn.addEventListener('click', setParams)
+
+
+
+const getSortValue = () => {
+
+    const sort = sortSearch.value
+    let sortToSearch = '' 
+    switch (sort) {
+        
+        case "orderBy=title":
+            sortToSearch = searchType.value === 'comics' ? "orderBy=title" : "orderBy=name"
+            return sortToSearch
+        case "orderBy=-title":
+        sortToSearch = searchType.value === 'comics' ? "orderBy=-title" : "orderBy=-name"
+            return sortToSearch
+        case "orderBy=-onsaleDate":
+        sortToSearch = searchType.value === 'comics' ? "orderBy=-onsaleDate" : "orderBy=-modified"
+        return sortToSearch
+        case "orderBy=onsaleDate":
+        sortToSearch = searchType.value === 'comics' ? "orderBy=onsaleDate" : "orderBy=modified"
+        default:
+            return sortToSearch
+    }
+
+}
+
+const inputToSearch = (type, input) => {
+
+    let wordToSearch = '' 
+    if (input) {
+        if (type === 'comics') {
+            wordToSearch += `&titleStartsWith=${input}`
+        } else if (type === 'characters'){
+            wordToSearch += `&nameStartsWith=${input}`
+        }
+        
+    }
+    return wordToSearch
+}

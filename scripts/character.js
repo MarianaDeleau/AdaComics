@@ -1,5 +1,3 @@
-//PETICION PERSONAJES
-var urlCharacter = BASE_URL + "/characters?ts=1&apikey=" + API_KEY + "&hash=" + HASH;
 //FUNCION DISPLAY GRILLA DE PERSONAJES
 var characters = document.getElementsByClassName("character__results");
 var displayCharacters = function (obj, offset) {
