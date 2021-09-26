@@ -54,14 +54,14 @@ var displayCharacters = function (obj, offset) {
 };
 //FUNCION DISPLAY SECCION PERSONAJE
 var displaySelectedCharacter = function (e) { return __awaiter(_this, void 0, void 0, function () {
-    var characterSelectedId, characterSelected, resultsSection;
+    var characterSelectedId, characterSelected, comicSelected;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 characterSelectedId = e.target.id;
                 characterSelected = document.getElementById('characterSelected');
-                resultsSection = document.getElementById('resultsSection');
-                console.log(characterSelectedId);
+                comicSelected = document.getElementById('comicSelected');
+                comicSelected.innerHTML = '';
                 return [4 /*yield*/, fetch(BASE_URL + "/characters/" + characterSelectedId + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
                         .then(function (response) {
                         return response.json();

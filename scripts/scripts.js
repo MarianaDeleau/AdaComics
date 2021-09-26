@@ -180,6 +180,7 @@ var changeSelect = function () {
     }
 };
 searchType.addEventListener('change', changeSelect);
+changeSelect();
 //DEFINE EL VALOR DEL SELECT TYPE POR QUERY PARAMS
 var setTypeSelectValue = function () {
     var params = new URLSearchParams(window.location.search);
@@ -191,6 +192,7 @@ var setTypeSelectValue = function () {
         searchType.value = 'comics';
     }
 };
+setTypeSelectValue();
 //INCIO PAGINA
 var init = function () {
     var _a = getParams(), type = _a.type, input = _a.input, sort = _a.sort, page = _a.page;

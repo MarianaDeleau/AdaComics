@@ -34,8 +34,9 @@ const displaySelectedComic = async (e) => {
 
     const comicSelectedId = e.target.id
     const comicSelected = document.getElementById('comicSelected')
+    const characterSelected = document.getElementById('characterSelected');
     const resultsGrid = document.getElementById('resultsGrid')
-   
+    characterSelected.innerHTML = ''
     await fetch(`${BASE_URL}/comics/${comicSelectedId}?ts=1&apikey=${API_KEY}&hash=${HASH}`)
     .then((response) => {
     

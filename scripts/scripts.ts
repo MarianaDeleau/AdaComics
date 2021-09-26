@@ -63,7 +63,6 @@ const disableButtons = (offset, total) => {
         btnPreviousPage.disabled = false
         btnPreviousPage.style.backgroundColor=  '#FF0000'
     }
-
     if (offset + 20 >= total) {
         btnEnd.disabled = true
         btnEnd.style.backgroundColor= 'transparent'
@@ -112,8 +111,6 @@ const fetchMarvel = (offset, url, type) => {
        
          })
 }
-
-
 
 //FILTROS A TRAVES DE QUERY PARAMS
 const handleSearchSubmit = (event) => {
@@ -216,8 +213,9 @@ const changeSelect = () => {
             sortSearch.appendChild(option2)
         }
 }
-      
+
 searchType.addEventListener('change', changeSelect)
+changeSelect()
 
 //DEFINE EL VALOR DEL SELECT TYPE POR QUERY PARAMS
 const setTypeSelectValue = () => {
@@ -230,8 +228,9 @@ const setTypeSelectValue = () => {
     } else {
         searchType.value='comics'
     }
+    
 }
-
+setTypeSelectValue()
 
 //INCIO PAGINA
 const init = () => {   

@@ -26,9 +26,8 @@ const displaySelectedCharacter = async (e) => {
 
     const characterSelectedId = e.target.id
     const characterSelected = document.getElementById('characterSelected');
-    const resultsSection = document.getElementById('resultsSection')
-    console.log(characterSelectedId)
-
+    const comicSelected = document.getElementById('comicSelected')
+    comicSelected.innerHTML = ''
     await fetch(`${BASE_URL}/characters/${characterSelectedId}?ts=1&apikey=${API_KEY}&hash=${HASH}`)
 
             .then((response) => {

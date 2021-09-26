@@ -58,13 +58,15 @@ for (var i = 0; i < comics.length; i++) {
 }
 //FUNCION DISPLAY COMIC SELECCIONADO
 var displaySelectedComic = function (e) { return __awaiter(_this, void 0, void 0, function () {
-    var comicSelectedId, comicSelected, resultsGrid;
+    var comicSelectedId, comicSelected, characterSelected, resultsGrid;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 comicSelectedId = e.target.id;
                 comicSelected = document.getElementById('comicSelected');
+                characterSelected = document.getElementById('characterSelected');
                 resultsGrid = document.getElementById('resultsGrid');
+                characterSelected.innerHTML = '';
                 return [4 /*yield*/, fetch(BASE_URL + "/comics/" + comicSelectedId + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
                         .then(function (response) {
                         return response.json();
