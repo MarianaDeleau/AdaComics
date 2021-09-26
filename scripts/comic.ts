@@ -1,57 +1,3 @@
-//CAPTURAR QUERY PARAMS
-const getParams =  () => {
-    const params = new URLSearchParams(window.location.search)
-
-    let type = params.get('search__type') || 'comics';
-    let sort = params.get('sort__search') || '';
-    let input = params.get('search__input');
-    let page = Number(params.get('page')) || '1'
-   
-    return {type, sort, input, page}
-
-  }
-
-  //PETICION MARVEL
-const fetchMarvel = (offset, url, type) => {
-    fetch(url)
-        .then((response) => {
-            return response.json()
-        })
-         .then(rta => {
-             const results = rta.data.results
-             const total = rta.data.total
-             if (type === 'comics') {
-                displayComics(results, offset)
-             } else if (type === 'characters') {
-                displayCharacters(results, offset)
-             }
-             resultsCounter(total)
-             disableButtons(offset, total)
-             
-             const lastButton = document.getElementById("btnEnd");
-             lastButton.dataset.lastpage = Math.round(total / rta.data.limit).toString();
-       
-         })
-}
-
-//INCIO PAGINA
-const init = () => {   
-    const { type, input, sort, page } = getParams()
-    
-    offset = page * 20 - 20
-    
-    let url = `${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&orderBy=${sort}&offset=${offset}`
-
-    if (input) {
-        url += inputToSearch(type, input)
-    }
-    fetchMarvel(offset, url, type)
-    changeSelect()
-}
-
-init();
-
-
 //FUNCION DISPLAY GRILLA DE COMICS
 const comics = document.getElementsByClassName("comic__results");
 
@@ -70,6 +16,7 @@ const displayComics = (obj, offset) => {
         resultsGrid.appendChild(divComic)
         for (let i = 0; i < comics.length; i++) {
             comics[i].addEventListener('click', displaySelectedComic)
+            //comics[i].addEventListener('click', handleSelectedItem)
         }
         
     });  
@@ -78,12 +25,13 @@ const displayComics = (obj, offset) => {
 
 //FUNCION DISPLAY COMIC SELECCIONADO
 const displaySelectedComic = async (e) => {
-    
+    // const params = new URLSearchParams(window.location.search)
+    // const id = params.get('id')
+
     const comicSelectedId = e.target.id
     const comicSelected = document.getElementById('comicSelected')
-    const resultsSection = document.getElementById('resultsSection')
-    console.log(comicSelectedId)
-
+    const resultsGrid = document.getElementById('resultsGrid')
+   
     await fetch(`${BASE_URL}/comics/${comicSelectedId}?ts=1&apikey=${API_KEY}&hash=${HASH}`)
     .then((response) => {
     
@@ -92,7 +40,7 @@ const displaySelectedComic = async (e) => {
     })
         .then(rta => {
     
-            const selectedComic: Comic = rta.data.results[0]
+        const selectedComic: Comic = rta.data.results[0]
             
         const comicCover = createNode('img', { src: `${selectedComic.thumbnail.path}.${selectedComic.thumbnail.extension}`, alt: `${selectedComic.title}`, class:"comic__cover" });
         const divCover = createNode('div', { class: "comic__cover" }, comicCover)
@@ -112,10 +60,41 @@ const displaySelectedComic = async (e) => {
         const comicDetail = createNode('div', { class: "comic__detail" }, comicTitle, publishedTitle, publishedDate, writersTitle, comicWriters, descriptionTitle, comicDescription )
         comicSelected.appendChild(divCover)
         comicSelected.appendChild(comicDetail)
+            
+        const urlRelatedInfo = `${BASE_URL}/comics/${comicSelectedId}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`
+           
+        fetchRelatedInfoComic(urlRelatedInfo, 'comics')
+            
             })        
-    resultsSection.setAttribute('hidden', 'true')
+    resultsGrid.style.justifyContent = 'start'
     
+}
+
+const fetchRelatedInfoComic = (url, type) => {
+      fetch(url)
+        .then((response) => {
+            return response.json()
+        })
+         .then(rta => {
+             const results = rta.data.results
+             const total = rta.data.total
+             if (type === 'comics') {
+                displayCharacters(results, offset)
+             } else if (type === 'characters') {
+                displayComics(results, offset)
+             }
+             resultsCounter(total)
+             disableButtons(offset, total)
+             
+             const lastButton = document.getElementById("btnEnd");
+             lastButton.dataset.lastpage = Math.ceil(total / rta.data.limit).toString();
+       
+         })
 }
 
 
 
+// window.onload = function () {
+//     displaySelectedComic()
+//     fetchRelatedInfoComic()
+// }

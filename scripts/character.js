@@ -75,11 +75,31 @@ var displaySelectedCharacter = function (e) { return __awaiter(_this, void 0, vo
                         var characterDetail = createNode('div', { "class": "character__detail" }, characterName, characterDescription);
                         characterSelected.appendChild(divPicture);
                         characterSelected.appendChild(characterDetail);
-                    })];
+                        var urlRelatedInfo = selectedCharacter.comics.collectionURI;
+                        urlRelatedInfo += "?apikey=" + API_KEY;
+                        console.log(urlRelatedInfo);
+                        fetchRelatedInfoCharacter(urlRelatedInfo, 'character');
+                    })
+                    // resultsSection.setAttribute('hidden', 'true')
+                ];
             case 1:
                 _a.sent();
-                resultsSection.setAttribute('hidden', 'true');
                 return [2 /*return*/];
         }
     });
 }); };
+var fetchRelatedInfoCharacter = function (url) {
+    fetch(url)
+        .then(function (response) {
+        return response.json();
+    })
+        .then(function (rta) {
+        var results = rta.data.results;
+        var total = rta.data.total;
+        displayComics(results, offset);
+        resultsCounter(total);
+        disableButtons(offset, total);
+        var lastButton = document.getElementById("btnEnd");
+        lastButton.dataset.lastpage = Math.ceil(total / rta.data.limit).toString();
+    });
+};

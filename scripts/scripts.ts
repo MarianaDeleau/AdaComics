@@ -18,6 +18,7 @@ const btnEnd = document.getElementById('btnEnd')
 const btnNextPage = document.getElementById('nextPage')
 
 
+
 //FUNCION PARA CREAR NODOS
     const createNode = (tag, attr, ...children) => {
         const elem = document.createElement(tag);
@@ -76,6 +77,43 @@ const disableButtons = (offset, total) => {
     }
 
 }
+//CAPTURAR QUERY PARAMS
+const getParams =  () => {
+    const params = new URLSearchParams(window.location.search)
+
+    let type = params.get('search__type') || 'comics';
+    let sort = params.get('sort__search') || '';
+    let input = params.get('search__input');
+    let page = Number(params.get('page')) || '1'
+   
+    return {type, sort, input, page}
+
+  }
+
+  //PETICION MARVEL
+const fetchMarvel = (offset, url, type) => {
+    fetch(url)
+        .then((response) => {
+            return response.json()
+        })
+         .then(rta => {
+             const results = rta.data.results
+             const total = rta.data.total
+             if (type === 'comics') {
+                displayComics(results, offset)
+             } else if (type === 'characters') {
+                displayCharacters(results, offset)
+             }
+             resultsCounter(total)
+             disableButtons(offset, total)
+             
+             const lastButton = document.getElementById("btnEnd");
+             lastButton.dataset.lastpage = Math.ceil(total / rta.data.limit).toString();
+       
+         })
+}
+
+
 
 //FILTROS A TRAVES DE QUERY PARAMS
 const handleSearchSubmit = (event) => {
@@ -91,6 +129,19 @@ const handleSearchSubmit = (event) => {
 
     window.location.href = `${window.location.pathname}?${params.toString()}`
 }
+
+
+const handleSelectedItem = (event) => {
+    
+    const comicSelected = event.target;
+    const params = new URLSearchParams(window.location.search);
+
+    params.set('id', comicSelected.id);
+    
+    window.location.href = `${window.location.pathname}?${params.toString()}`
+    
+}
+
 
 //PAGINADO A TRAVES DE QUERY PARAMS
 const handlePaginationClick = (event) => {
@@ -147,18 +198,42 @@ const inputToSearch = (type, input) => {
 //   #### MEJORAR CON CREATE NODE ###
 const changeSelect = () => {
     
-        if (searchType.value === 'comics') {
-            sortSearch.innerHTML = `                  
-            <option value="title">A-Z</option>
-            <option value="-title">Z-A</option>
-            <option value="-focDate">Más nuevos</option>
-            <option value="focDate">Más viejos</option>`
+    if (searchType.value === 'comics') {
+        sortSearch.innerHTML = ''
+        const option1 = createNode('option', { value: 'title' }, document.createTextNode('A-Z'))
+        const option2 = createNode('option', { value: '-title' }, document.createTextNode('Z-A'))
+        const option3 = createNode('option', { value: '-focDate' }, document.createTextNode('Más nuevos'))
+        const option4 = createNode('option', { value: 'focDate' }, document.createTextNode('Más viejos'))
+        sortSearch.appendChild(option1)
+        sortSearch.appendChild(option2)
+        sortSearch.appendChild(option3)
+        sortSearch.appendChild(option4)
         }
-        if (searchType.value === 'characters') {
-            sortSearch.innerHTML = `                  
-            <option value="name">A-Z</option>
-            <option value="-name">Z-A</option> `
+    if (searchType.value === 'characters') {
+            sortSearch.innerHTML = ''
+            const option1 = createNode('option', { value: 'name' }, document.createTextNode('A-Z'))
+            const option2 = createNode('option', { value: '-name' }, document.createTextNode('Z-A'))
+            sortSearch.appendChild(option1)
+            sortSearch.appendChild(option2)
         }
 }
       
 searchType.addEventListener('change', changeSelect)
+
+//INCIO PAGINA
+const init = () => {   
+    const { type, input, sort, page } = getParams()
+    
+    offset = page * 20 - 20
+    
+    let url = `${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&orderBy=${sort}&offset=${offset}`
+
+    if (input) {
+        url += inputToSearch(type, input)
+    }
+    fetchMarvel(offset, url, type)
+    changeSelect()
+
+}
+
+init();

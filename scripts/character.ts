@@ -46,8 +46,34 @@ const displaySelectedCharacter = async (e) => {
             const characterDetail = createNode('div', { class: "character__detail" },characterName, characterDescription  )
             characterSelected.appendChild(divPicture)
             characterSelected.appendChild(characterDetail)
+            
+            const urlRelatedInfo = selectedCharacter.comics.collectionURI
+                urlRelatedInfo += `?apikey=${API_KEY}`
+                console.log(urlRelatedInfo)
+            fetchRelatedInfoCharacter(urlRelatedInfo, 'character')
+                
             })
         
-            resultsSection.setAttribute('hidden', 'true')
+           // resultsSection.setAttribute('hidden', 'true')
 
+}
+
+const fetchRelatedInfoCharacter = (url) => {
+    fetch(url)
+        .then((response) => {
+            return response.json()
+        })
+         .then(rta => {
+             const results = rta.data.results
+             const total = rta.data.total
+            
+                displayComics(results, offset)
+           
+             resultsCounter(total)
+             disableButtons(offset, total)
+             
+             const lastButton = document.getElementById("btnEnd");
+             lastButton.dataset.lastpage = Math.ceil(total / rta.data.limit).toString();
+       
+         })
 }

@@ -35,48 +35,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var _this = this;
-//CAPTURAR QUERY PARAMS
-var getParams = function () {
-    var params = new URLSearchParams(window.location.search);
-    var type = params.get('search__type') || 'comics';
-    var sort = params.get('sort__search') || '';
-    var input = params.get('search__input');
-    var page = Number(params.get('page')) || '1';
-    return { type: type, sort: sort, input: input, page: page };
-};
-//PETICION MARVEL
-var fetchMarvel = function (offset, url, type) {
-    fetch(url)
-        .then(function (response) {
-        return response.json();
-    })
-        .then(function (rta) {
-        var results = rta.data.results;
-        var total = rta.data.total;
-        if (type === 'comics') {
-            displayComics(results, offset);
-        }
-        else if (type === 'characters') {
-            displayCharacters(results, offset);
-        }
-        resultsCounter(total);
-        disableButtons(offset, total);
-        var lastButton = document.getElementById("btnEnd");
-        lastButton.dataset.lastpage = Math.round(total / rta.data.limit).toString();
-    });
-};
-//INCIO PAGINA
-var init = function () {
-    var _a = getParams(), type = _a.type, input = _a.input, sort = _a.sort, page = _a.page;
-    offset = page * 20 - 20;
-    var url = BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&orderBy=" + sort + "&offset=" + offset;
-    if (input) {
-        url += inputToSearch(type, input);
-    }
-    fetchMarvel(offset, url, type);
-    changeSelect();
-};
-init();
 //FUNCION DISPLAY GRILLA DE COMICS
 var comics = document.getElementsByClassName("comic__results");
 var displayComics = function (obj, offset) {
@@ -91,19 +49,19 @@ var displayComics = function (obj, offset) {
         resultsGrid.appendChild(divComic);
         for (var i = 0; i < comics.length; i++) {
             comics[i].addEventListener('click', displaySelectedComic);
+            //comics[i].addEventListener('click', handleSelectedItem)
         }
     });
 };
 //FUNCION DISPLAY COMIC SELECCIONADO
 var displaySelectedComic = function (e) { return __awaiter(_this, void 0, void 0, function () {
-    var comicSelectedId, comicSelected, resultsSection;
+    var comicSelectedId, comicSelected, resultsGrid;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 comicSelectedId = e.target.id;
                 comicSelected = document.getElementById('comicSelected');
-                resultsSection = document.getElementById('resultsSection');
-                console.log(comicSelectedId);
+                resultsGrid = document.getElementById('resultsGrid');
                 return [4 /*yield*/, fetch(BASE_URL + "/comics/" + comicSelectedId + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
                         .then(function (response) {
                         return response.json();
@@ -127,11 +85,37 @@ var displaySelectedComic = function (e) { return __awaiter(_this, void 0, void 0
                         var comicDetail = createNode('div', { "class": "comic__detail" }, comicTitle, publishedTitle, publishedDate, writersTitle, comicWriters, descriptionTitle, comicDescription);
                         comicSelected.appendChild(divCover);
                         comicSelected.appendChild(comicDetail);
+                        var urlRelatedInfo = BASE_URL + "/comics/" + comicSelectedId + "/characters?ts=1&apikey=" + API_KEY + "&hash=" + HASH;
+                        fetchRelatedInfoComic(urlRelatedInfo, 'comics');
                     })];
             case 1:
                 _a.sent();
-                resultsSection.setAttribute('hidden', 'true');
+                resultsGrid.style.justifyContent = 'start';
                 return [2 /*return*/];
         }
     });
 }); };
+var fetchRelatedInfoComic = function (url, type) {
+    fetch(url)
+        .then(function (response) {
+        return response.json();
+    })
+        .then(function (rta) {
+        var results = rta.data.results;
+        var total = rta.data.total;
+        if (type === 'comics') {
+            displayCharacters(results, offset);
+        }
+        else if (type === 'characters') {
+            displayComics(results, offset);
+        }
+        resultsCounter(total);
+        disableButtons(offset, total);
+        var lastButton = document.getElementById("btnEnd");
+        lastButton.dataset.lastpage = Math.ceil(total / rta.data.limit).toString();
+    });
+};
+// window.onload = function () {
+//     displaySelectedComic()
+//     fetchRelatedInfoComic()
+// }
