@@ -130,6 +130,19 @@ const handleSearchSubmit = (event) => {
     window.location.href = `${window.location.pathname}?${params.toString()}`
 }
 
+
+const handleSelectedItem = (event) => {
+    
+    const comicSelected = event.target;
+    const params = new URLSearchParams(window.location.search);
+
+    params.set('id', comicSelected.id);
+    
+    window.location.href = `${window.location.pathname}?${params.toString()}`
+    
+}
+
+
 //PAGINADO A TRAVES DE QUERY PARAMS
 const handlePaginationClick = (event) => {
     const params = new URLSearchParams(window.location.search);
@@ -220,6 +233,7 @@ const init = () => {
     }
     fetchMarvel(offset, url, type)
     changeSelect()
+
 }
 
 init();

@@ -108,6 +108,12 @@ var handleSearchSubmit = function (event) {
     params.set('page', '1');
     window.location.href = window.location.pathname + "?" + params.toString();
 };
+var handleSelectedItem = function (event) {
+    var comicSelected = event.target;
+    var params = new URLSearchParams(window.location.search);
+    params.set('id', comicSelected.id);
+    window.location.href = window.location.pathname + "?" + params.toString();
+};
 //PAGINADO A TRAVES DE QUERY PARAMS
 var handlePaginationClick = function (event) {
     var params = new URLSearchParams(window.location.search);

@@ -29,9 +29,9 @@ type Comic = {
         resourceURI?: string,
         name?: string,
     },
-    variants?: [],
-    collections?: [],
-    collectedIssues?: [],
+    variants?: string[],
+    collections?: string[],
+    collectedIssues?: string[],
     dates: [{
         type?: string,
         date?: string,
@@ -48,11 +48,14 @@ type Comic = {
         path?: string,
         extension?: string,
     },
-    images?: [],
+    images?: {
+        path?: string,
+        extension?: string,
+    },
     creators?: {
         available?: number,
         collectionURI?: string,
-        items?: [],
+        items?: Character[],
         returned?: number
     },
     characters?: {
@@ -64,12 +67,20 @@ type Comic = {
     stories?: {
         available?: number,
         collectionURI?: string,
-        items?: [],
+        items?:[{
+            resourceURI?: string,
+            name?: string,
+            type?: string,
+        }],
+        returned?: number, 
     },
     events?: {
         available?: number,
         collectionURI?: string,
-        items?: [],
+        items?: [{
+            resourceURI?: string,
+            name?: string,
+        }],
         returned?: number,
     },
 }
@@ -97,19 +108,28 @@ type Character = {
     series?:      {
         available?:     number,
         collectionURI?: string,
-        items?:         [],
+        items?:        [{
+            resourceURI?: string,
+            name?:        string,
+        }],
         returned?:      number,
     },
     stories?:     {
         available?:     number,
         collectionURI?: string,
-        items?:         [],
+        items?:         [{
+            resourceURI?: string,
+            name?:        string,
+        }],
         returned?:      number,
     },
     events?:     {
         available?:     number,
         collectionURI?: string,
-        items?:         [],
+        items?:         [{
+            resourceURI?: string,
+            name?:        string,
+        }],
         returned?:      number,
     },
     urls?:       [{
