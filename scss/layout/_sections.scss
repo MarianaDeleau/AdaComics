@@ -58,7 +58,8 @@ align-items: center;
   flex-direction: column;
   align-items: center;
   margin-bottom: 10px;
-  margin-right: 20px
+  margin-right: 20px;
+  
 }
 
 .comic-results-cover{
@@ -71,6 +72,7 @@ align-items: center;
 .comic-results-title{
   width: 180px;
   height: auto; 
+  pointer-events: none;
 }
 
 .character__results{

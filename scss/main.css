@@ -8,6 +8,10 @@
   color: grey;
 }
 
+.h3 {
+  pointer-events: none;
+}
+
 .input {
   width: 90%;
   border: transparent;
@@ -224,6 +228,7 @@
 .comic-results-title, .character-results-title {
   width: 180px;
   height: auto;
+  pointer-events: none;
 }
 
 .character__results {
