@@ -99,7 +99,7 @@ var fetchMarvel = function (offset, url, type) {
 };
 //FILTROS A TRAVES DE QUERY PARAMS
 var handleSearchSubmit = function (event) {
-    event.preventDefault();
+    //event.preventDefault()
     var form = event.target;
     var params = new URLSearchParams(window.location.search);
     params.set('search__input', form.search__input.value);
@@ -159,7 +159,6 @@ var inputToSearch = function (type, input) {
     return wordToSearch;
 };
 //FUNCION PARA ACTUALIZAR SELECT SEGUN TIPO 
-//   #### MEJORAR CON CREATE NODE ###
 var changeSelect = function () {
     if (searchType.value === 'comics') {
         sortSearch.innerHTML = '';
@@ -181,6 +180,17 @@ var changeSelect = function () {
     }
 };
 searchType.addEventListener('change', changeSelect);
+//DEFINE EL VALOR DEL SELECT TYPE POR QUERY PARAMS
+var setTypeSelectValue = function () {
+    var params = new URLSearchParams(window.location.search);
+    var selectValue = params.get('search__type');
+    if (selectValue === 'characters') {
+        searchType.value = 'characters';
+    }
+    else {
+        searchType.value = 'comics';
+    }
+};
 //INCIO PAGINA
 var init = function () {
     var _a = getParams(), type = _a.type, input = _a.input, sort = _a.sort, page = _a.page;
@@ -190,6 +200,7 @@ var init = function () {
         url += inputToSearch(type, input);
     }
     fetchMarvel(offset, url, type);
+    setTypeSelectValue();
     changeSelect();
 };
 init();

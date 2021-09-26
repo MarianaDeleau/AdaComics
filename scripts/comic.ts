@@ -23,6 +23,10 @@ const displayComics = (obj, offset) => {
 
 }
 
+for (let i = 0; i < comics.length; i++) {
+    comics[i].addEventListener('click', handleSelectedItem)
+}
+
 //FUNCION DISPLAY COMIC SELECCIONADO
 const displaySelectedComic = async (e) => {
     // const params = new URLSearchParams(window.location.search)
@@ -62,7 +66,6 @@ const displaySelectedComic = async (e) => {
         comicSelected.appendChild(comicDetail)
             
         const urlRelatedInfo = `${BASE_URL}/comics/${comicSelectedId}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`
-           
         fetchRelatedInfoComic(urlRelatedInfo, 'comics')
             
             })        

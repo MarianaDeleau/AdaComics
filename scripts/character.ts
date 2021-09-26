@@ -50,7 +50,7 @@ const displaySelectedCharacter = async (e) => {
             const urlRelatedInfo = selectedCharacter.comics.collectionURI
                 urlRelatedInfo += `?apikey=${API_KEY}`
                 console.log(urlRelatedInfo)
-            fetchRelatedInfoCharacter(urlRelatedInfo, 'character')
+            fetchRelatedInfoCharacter(urlRelatedInfo, 'characters')
                 
             })
         

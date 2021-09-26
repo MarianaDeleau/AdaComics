@@ -53,6 +53,9 @@ var displayComics = function (obj, offset) {
         }
     });
 };
+for (var i = 0; i < comics.length; i++) {
+    comics[i].addEventListener('click', handleSelectedItem);
+}
 //FUNCION DISPLAY COMIC SELECCIONADO
 var displaySelectedComic = function (e) { return __awaiter(_this, void 0, void 0, function () {
     var comicSelectedId, comicSelected, resultsGrid;

@@ -78,7 +78,7 @@ var displaySelectedCharacter = function (e) { return __awaiter(_this, void 0, vo
                         var urlRelatedInfo = selectedCharacter.comics.collectionURI;
                         urlRelatedInfo += "?apikey=" + API_KEY;
                         console.log(urlRelatedInfo);
-                        fetchRelatedInfoCharacter(urlRelatedInfo, 'character');
+                        fetchRelatedInfoCharacter(urlRelatedInfo, 'characters');
                     })
                     // resultsSection.setAttribute('hidden', 'true')
                 ];

@@ -117,7 +117,7 @@ const fetchMarvel = (offset, url, type) => {
 
 //FILTROS A TRAVES DE QUERY PARAMS
 const handleSearchSubmit = (event) => {
-    event.preventDefault()
+    //event.preventDefault()
     const form = event.target;
 
     const params = new URLSearchParams(window.location.search);
@@ -195,7 +195,6 @@ const inputToSearch = (type, input) => {
 }
 
 //FUNCION PARA ACTUALIZAR SELECT SEGUN TIPO 
-//   #### MEJORAR CON CREATE NODE ###
 const changeSelect = () => {
     
     if (searchType.value === 'comics') {
@@ -220,6 +219,20 @@ const changeSelect = () => {
       
 searchType.addEventListener('change', changeSelect)
 
+//DEFINE EL VALOR DEL SELECT TYPE POR QUERY PARAMS
+const setTypeSelectValue = () => {
+
+    const params = new URLSearchParams(window.location.search);
+    let selectValue = params.get('search__type');
+
+    if (selectValue === 'characters') {
+        searchType.value='characters'
+    } else {
+        searchType.value='comics'
+    }
+}
+
+
 //INCIO PAGINA
 const init = () => {   
     const { type, input, sort, page } = getParams()
@@ -232,8 +245,8 @@ const init = () => {
         url += inputToSearch(type, input)
     }
     fetchMarvel(offset, url, type)
+    setTypeSelectValue()
     changeSelect()
-
 }
 
 init();
