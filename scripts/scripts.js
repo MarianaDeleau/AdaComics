@@ -74,10 +74,11 @@ var getParams = function () {
     var sort = params.get('sort__search') || '';
     var input = params.get('search__input');
     var page = Number(params.get('page')) || '1';
-    return { type: type, sort: sort, input: input, page: page };
+    var id = params.get('id'); //agregado prueba
+    return { type: type, sort: sort, input: input, page: page, id: id };
 };
 //PETICION MARVEL
-var fetchMarvel = function (offset, url, type) {
+var fetchMarvel = function (offset, url, type, id) {
     fetch(url)
         .then(function (response) {
         return response.json();
@@ -85,11 +86,21 @@ var fetchMarvel = function (offset, url, type) {
         .then(function (rta) {
         var results = rta.data.results;
         var total = rta.data.total;
-        if (type === 'comics') {
-            displayComics(results, offset);
+        if (!id) {
+            if (type === 'comics') {
+                displayComics(results, offset);
+            }
+            else if (type === 'characters') {
+                displayCharacters(results, offset);
+            }
         }
-        else if (type === 'characters') {
-            displayCharacters(results, offset);
+        else {
+            if (type === 'comic-results-cover') {
+                displaySelectedComic(results);
+            }
+            else if (type === 'character-results-picture') {
+                displaySelectedCharacter(results);
+            }
         }
         resultsCounter(total);
         disableButtons(offset, total);
@@ -99,7 +110,7 @@ var fetchMarvel = function (offset, url, type) {
 };
 //FILTROS A TRAVES DE QUERY PARAMS
 var handleSearchSubmit = function (event) {
-    event.preventDefault();
+    //event.preventDefault()
     var form = event.target;
     var params = new URLSearchParams(window.location.search);
     params.set('search__input', form.search__input.value);
@@ -108,10 +119,12 @@ var handleSearchSubmit = function (event) {
     params.set('page', '1');
     window.location.href = window.location.pathname + "?" + params.toString();
 };
+//FILTROS A TRAVES DE ID EN QUERY PARAMS
 var handleSelectedItem = function (event) {
-    var comicSelected = event.target;
+    var itemSelected = event.target;
     var params = new URLSearchParams(window.location.search);
-    params.set('id', comicSelected.id);
+    params.set('id', itemSelected.id);
+    params.set('search__type', (itemSelected.getAttribute('class')));
     window.location.href = window.location.pathname + "?" + params.toString();
 };
 //PAGINADO A TRAVES DE QUERY PARAMS
@@ -159,7 +172,6 @@ var inputToSearch = function (type, input) {
     return wordToSearch;
 };
 //FUNCION PARA ACTUALIZAR SELECT SEGUN TIPO 
-//   #### MEJORAR CON CREATE NODE ###
 var changeSelect = function () {
     if (searchType.value === 'comics') {
         sortSearch.innerHTML = '';
@@ -181,15 +193,41 @@ var changeSelect = function () {
     }
 };
 searchType.addEventListener('change', changeSelect);
-//INCIO PAGINA
+changeSelect();
+//DEFINE EL VALOR DEL SELECT TYPE POR QUERY PARAMS
+var setTypeSelectValue = function () {
+    var params = new URLSearchParams(window.location.search);
+    var selectValue = params.get('search__type');
+    if (selectValue === 'characters') {
+        searchType.value = 'characters';
+    }
+    else {
+        searchType.value = 'comics';
+    }
+};
+setTypeSelectValue();
+//INICIO PAGINA
 var init = function () {
-    var _a = getParams(), type = _a.type, input = _a.input, sort = _a.sort, page = _a.page;
+    var _a = getParams(), type = _a.type, input = _a.input, sort = _a.sort, page = _a.page, id = _a.id;
+    var url = '';
     offset = page * 20 - 20;
-    var url = BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&orderBy=" + sort + "&offset=" + offset;
+    if (id) {
+        console.log(id);
+        if (type === 'comic-results-cover') {
+            url = BASE_URL + "/comics/" + id + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH;
+        }
+        else if (type === 'character-results-picture') {
+            url = BASE_URL + "/characters/" + id + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH;
+        }
+    }
+    else if (!id) {
+        url = BASE_URL + "/" + type + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH + "&orderBy=" + sort + "&offset=" + offset;
+    }
     if (input) {
         url += inputToSearch(type, input);
     }
-    fetchMarvel(offset, url, type);
+    fetchMarvel(offset, url, type, id);
+    setTypeSelectValue();
     changeSelect();
 };
 init();

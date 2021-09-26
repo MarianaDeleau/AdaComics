@@ -63,7 +63,6 @@ const disableButtons = (offset, total) => {
         btnPreviousPage.disabled = false
         btnPreviousPage.style.backgroundColor=  '#FF0000'
     }
-
     if (offset + 20 >= total) {
         btnEnd.disabled = true
         btnEnd.style.backgroundColor= 'transparent'
@@ -85,13 +84,13 @@ const getParams =  () => {
     let sort = params.get('sort__search') || '';
     let input = params.get('search__input');
     let page = Number(params.get('page')) || '1'
-   
-    return {type, sort, input, page}
+    let id = params.get('id') //agregado prueba
+    return {type, sort, input, page, id}
 
   }
 
-  //PETICION MARVEL
-const fetchMarvel = (offset, url, type) => {
+//PETICION MARVEL
+const fetchMarvel = (offset, url, type, id) => {
     fetch(url)
         .then((response) => {
             return response.json()
@@ -99,10 +98,18 @@ const fetchMarvel = (offset, url, type) => {
          .then(rta => {
              const results = rta.data.results
              const total = rta.data.total
-             if (type === 'comics') {
-                displayComics(results, offset)
-             } else if (type === 'characters') {
-                displayCharacters(results, offset)
+             if (!id) {
+                if (type === 'comics') {
+                    displayComics(results, offset)
+                } else if (type === 'characters') {
+                    displayCharacters(results, offset)
+                }
+             } else {
+                if (type === 'comic-results-cover') {
+                    displaySelectedComic(results)
+                } else if (type === 'character-results-picture') {
+                    displaySelectedCharacter(results)
+                }
              }
              resultsCounter(total)
              disableButtons(offset, total)
@@ -113,11 +120,9 @@ const fetchMarvel = (offset, url, type) => {
          })
 }
 
-
-
 //FILTROS A TRAVES DE QUERY PARAMS
 const handleSearchSubmit = (event) => {
-    event.preventDefault()
+    //event.preventDefault()
     const form = event.target;
 
     const params = new URLSearchParams(window.location.search);
@@ -130,14 +135,14 @@ const handleSearchSubmit = (event) => {
     window.location.href = `${window.location.pathname}?${params.toString()}`
 }
 
-
+//FILTROS A TRAVES DE ID EN QUERY PARAMS
 const handleSelectedItem = (event) => {
     
-    const comicSelected = event.target;
+    const itemSelected = event.target;
     const params = new URLSearchParams(window.location.search);
 
-    params.set('id', comicSelected.id);
-    
+    params.set('id', itemSelected.id);
+    params.set('search__type', (itemSelected.getAttribute('class'))  )
     window.location.href = `${window.location.pathname}?${params.toString()}`
     
 }
@@ -195,7 +200,6 @@ const inputToSearch = (type, input) => {
 }
 
 //FUNCION PARA ACTUALIZAR SELECT SEGUN TIPO 
-//   #### MEJORAR CON CREATE NODE ###
 const changeSelect = () => {
     
     if (searchType.value === 'comics') {
@@ -217,23 +221,48 @@ const changeSelect = () => {
             sortSearch.appendChild(option2)
         }
 }
-      
-searchType.addEventListener('change', changeSelect)
 
-//INCIO PAGINA
-const init = () => {   
-    const { type, input, sort, page } = getParams()
+searchType.addEventListener('change', changeSelect)
+changeSelect()
+
+//DEFINE EL VALOR DEL SELECT TYPE POR QUERY PARAMS
+const setTypeSelectValue = () => {
+
+    const params = new URLSearchParams(window.location.search);
+    let selectValue = params.get('search__type');
+
+    if (selectValue === 'characters') {
+        searchType.value='characters'
+    } else {
+        searchType.value='comics'
+    }
     
+}
+setTypeSelectValue()
+
+//INICIO PAGINA
+const init = () => {   
+    const { type, input, sort, page, id } = getParams()
+    let url = ''
     offset = page * 20 - 20
     
-    let url = `${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&orderBy=${sort}&offset=${offset}`
-
-    if (input) {
-        url += inputToSearch(type, input)
+    if (id) {
+console.log(id)
+        if (type === 'comic-results-cover') {
+            url = `${BASE_URL}/comics/${id}?ts=1&apikey=${API_KEY}&hash=${HASH}`
+        } else if (type === 'character-results-picture') {
+            url = `${BASE_URL}/characters/${id}?ts=1&apikey=${API_KEY}&hash=${HASH}`
+        }
+    } else if (!id){
+        url = `${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&orderBy=${sort}&offset=${offset}`
     }
-    fetchMarvel(offset, url, type)
-    changeSelect()
+     if (input) {
+        url += inputToSearch(type, input)
+        }
+        fetchMarvel(offset, url, type, id)
+        setTypeSelectValue()
+        changeSelect()
+    }        
 
-}
 
 init();
