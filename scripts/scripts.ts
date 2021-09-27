@@ -113,7 +113,7 @@ const fetchMarvel = (offset, url, type, id) => {
              }
              resultsCounter(total)
              disableButtons(offset, total)
-             
+           
              const lastButton = document.getElementById("btnEnd");
              lastButton.dataset.lastpage = Math.ceil(total / rta.data.limit).toString();
        
@@ -227,18 +227,17 @@ changeSelect()
 
 //DEFINE EL VALOR DEL SELECT TYPE POR QUERY PARAMS
 const setTypeSelectValue = () => {
-
-    const params = new URLSearchParams(window.location.search);
-    let selectValue = params.get('search__type');
-
-    if (selectValue === 'characters') {
+    const { type } = getParams()
+    
+    if (type === 'characters') {
+        searchType.value='characters'
+    } else if (type === 'character-results-picture'){
         searchType.value='characters'
     } else {
         searchType.value='comics'
     }
-    
 }
-setTypeSelectValue()
+//setTypeSelectValue()
 
 //INICIO PAGINA
 const init = () => {   

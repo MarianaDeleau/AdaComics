@@ -2,7 +2,6 @@
 const comics = document.getElementsByClassName("comic__results");
 
 const displayComics = (obj, offset) => {
-
     const resultsGrid = document.getElementById('resultsGrid')
     resultsGrid.innerHTML = " ";
     
