@@ -13,7 +13,6 @@ const fetchRelatedInfoComic = (url, type) => {
            }
            resultsCounter(total)
            disableButtons(offset, total)
-           
            const lastButton = document.getElementById("btnEnd");
            lastButton.dataset.lastpage = Math.ceil(total / rta.data.limit).toString();
      

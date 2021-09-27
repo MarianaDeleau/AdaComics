@@ -196,16 +196,18 @@ searchType.addEventListener('change', changeSelect);
 changeSelect();
 //DEFINE EL VALOR DEL SELECT TYPE POR QUERY PARAMS
 var setTypeSelectValue = function () {
-    var params = new URLSearchParams(window.location.search);
-    var selectValue = params.get('search__type');
-    if (selectValue === 'characters') {
+    var type = getParams().type;
+    if (type === 'characters') {
+        searchType.value = 'characters';
+    }
+    else if (type === 'character-results-picture') {
         searchType.value = 'characters';
     }
     else {
         searchType.value = 'comics';
     }
 };
-setTypeSelectValue();
+//setTypeSelectValue()
 //INICIO PAGINA
 var init = function () {
     var _a = getParams(), type = _a.type, input = _a.input, sort = _a.sort, page = _a.page, id = _a.id;
