@@ -7,8 +7,8 @@ const displayComics = (obj, offset) => {
     
     obj.forEach((item: Comic) => {
         
-        const comicCover = createNode('img', { src: `${item.thumbnail.path}.${item.thumbnail.extension}`, alt: `${item.title}`, class: "comic-results-cover" , id: `${item.id}`});
-        const divCover = createNode('div', { class: "comic-results-cover" }, comicCover)
+        const comicCover = createNode('img', { src: `${item.thumbnail.path}.${item.thumbnail.extension}`, alt: `${item.title}`, class: "comics" , id: `${item.id}`});
+        const divCover = createNode('div', { class: "comics" }, comicCover)
         const comicTitle = createNode('h3', { class: 'h3' }, document.createTextNode(item.title))
         const divTitle = createNode('div', { class: "comic-results-title" }, comicTitle)
         const divComic = createNode('div', { class: "comic__results", href: `./index.html?title=${item.title}&id=${item.id}&offset=${offset}` }, divCover, divTitle)
@@ -22,12 +22,11 @@ const displayComics = (obj, offset) => {
     });  
 
 }
-
+const comicSelected = document.getElementById('comicSelected')
+const characterSelected = document.getElementById('characterSelected');
 //FUNCION DISPLAY COMIC SELECCIONADO
 const displaySelectedComic = (obj) => {
-   
-    const comicSelected = document.getElementById('comicSelected')
-    const characterSelected = document.getElementById('characterSelected');
+
     const resultsGrid = document.getElementById('resultsGrid')
     characterSelected.innerHTML = ''
 
@@ -51,8 +50,9 @@ const displaySelectedComic = (obj) => {
         comicSelected.appendChild(divCover)
         comicSelected.appendChild(comicDetail)
             
-        const urlRelatedInfo = `${BASE_URL}/comics/${item.id}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`
-        fetchRelatedInfoComic(urlRelatedInfo, 'comics')
+        // const urlRelatedInfo = `${BASE_URL}/comics/${item.id}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`
+        // //fetchRelatedInfoComic(urlRelatedInfo, 'comics', 0)
+        // fetchRelatedInfoComic(urlRelatedInfo, 'comics', 0)
     });  
         resultsGrid.style.justifyContent = 'start'
 }

@@ -4,8 +4,8 @@ var displayComics = function (obj, offset) {
     var resultsGrid = document.getElementById('resultsGrid');
     resultsGrid.innerHTML = " ";
     obj.forEach(function (item) {
-        var comicCover = createNode('img', { src: item.thumbnail.path + "." + item.thumbnail.extension, alt: "" + item.title, "class": "comic-results-cover", id: "" + item.id });
-        var divCover = createNode('div', { "class": "comic-results-cover" }, comicCover);
+        var comicCover = createNode('img', { src: item.thumbnail.path + "." + item.thumbnail.extension, alt: "" + item.title, "class": "comics", id: "" + item.id });
+        var divCover = createNode('div', { "class": "comics" }, comicCover);
         var comicTitle = createNode('h3', { "class": 'h3' }, document.createTextNode(item.title));
         var divTitle = createNode('div', { "class": "comic-results-title" }, comicTitle);
         var divComic = createNode('div', { "class": "comic__results", href: "./index.html?title=" + item.title + "&id=" + item.id + "&offset=" + offset }, divCover, divTitle);
@@ -15,10 +15,10 @@ var displayComics = function (obj, offset) {
         }
     });
 };
+var comicSelected = document.getElementById('comicSelected');
+var characterSelected = document.getElementById('characterSelected');
 //FUNCION DISPLAY COMIC SELECCIONADO
 var displaySelectedComic = function (obj) {
-    var comicSelected = document.getElementById('comicSelected');
-    var characterSelected = document.getElementById('characterSelected');
     var resultsGrid = document.getElementById('resultsGrid');
     characterSelected.innerHTML = '';
     obj.forEach(function (item) {
@@ -39,8 +39,9 @@ var displaySelectedComic = function (obj) {
         var comicDetail = createNode('div', { "class": "comic__detail" }, comicTitle, publishedTitle, publishedDate, writersTitle, comicWriters, descriptionTitle, comicDescription);
         comicSelected.appendChild(divCover);
         comicSelected.appendChild(comicDetail);
-        var urlRelatedInfo = BASE_URL + "/comics/" + item.id + "/characters?ts=1&apikey=" + API_KEY + "&hash=" + HASH;
-        fetchRelatedInfoComic(urlRelatedInfo, 'comics');
+        // const urlRelatedInfo = `${BASE_URL}/comics/${item.id}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`
+        // //fetchRelatedInfoComic(urlRelatedInfo, 'comics', 0)
+        // fetchRelatedInfoComic(urlRelatedInfo, 'comics', 0)
     });
     resultsGrid.style.justifyContent = 'start';
 };

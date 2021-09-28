@@ -98,17 +98,21 @@ const fetchMarvel = (offset, url, type, id) => {
          .then(rta => {
              const results = rta.data.results
              const total = rta.data.total
+             
              if (!id) {
                 if (type === 'comics') {
                     displayComics(results, offset)
                 } else if (type === 'characters') {
                     displayCharacters(results, offset)
                 }
-             } else {
-                if (type === 'comic-results-cover') {
-                    displaySelectedComic(results)
-                } else if (type === 'character-results-picture') {
-                    displaySelectedCharacter(results)
+             }
+             else {
+                if (type === 'comics') {
+                    displayCharacters(results, offset)
+                    //displaySelectedComic(results)
+                } else if (type === 'characters') {
+                    displayComics(results, offset)
+                   // displaySelectedCharacter(results)
                 }
              }
              resultsCounter(total)
@@ -140,13 +144,30 @@ const handleSelectedItem = (event) => {
     
     const itemSelected = event.target;
     const params = new URLSearchParams(window.location.search);
-
     params.set('id', itemSelected.id);
-    params.set('search__type', (itemSelected.getAttribute('class'))  )
+    params.set('search__type', (itemSelected.getAttribute('class')))
+  //  params.set('sort__search', sortSearch.value)
+    params.set('search__input', "")
+    params.set('page', '1')
+    
     window.location.href = `${window.location.pathname}?${params.toString()}`
     
 }
 
+//FILTROS A TRAVES DE ID EN QUERY PARAMS
+const handleSelectedItemInfo = () => {
+      
+    const params = new URLSearchParams(window.location.search);
+
+    let id = params.get('id')
+    params.set('id', id);
+    params.set('search__type', searchType.value)
+    params.set('sort__search', sortSearch.value)
+    params.set('page', '1')
+    
+    window.location.href = `${window.location.pathname}?${params.toString()}`
+    
+}
 
 //PAGINADO A TRAVES DE QUERY PARAMS
 const handlePaginationClick = (event) => {
@@ -246,11 +267,10 @@ const init = () => {
     offset = page * 20 - 20
     
     if (id) {
-console.log(id)
-        if (type === 'comic-results-cover') {
-            url = `${BASE_URL}/comics/${id}?ts=1&apikey=${API_KEY}&hash=${HASH}`
-        } else if (type === 'character-results-picture') {
-            url = `${BASE_URL}/characters/${id}?ts=1&apikey=${API_KEY}&hash=${HASH}`
+        if (type === 'comics') {
+            url = `${BASE_URL}/comics/${id}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}&orderBy=name&offset=${offset}`
+        } else if (type === 'characters') {
+            url = `${BASE_URL}/characters/${id}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&orderBy=title&offset=${offset}`
         }
     } else if (!id){
         url = `${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&orderBy=${sort}&offset=${offset}`

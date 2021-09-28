@@ -1,4 +1,4 @@
-var fetchRelatedInfoComic = function (url, type) {
+var fetchRelatedInfoComic = function (url, type, offset) {
     fetch(url)
         .then(function (response) {
         return response.json();

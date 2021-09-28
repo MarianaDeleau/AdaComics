@@ -62,7 +62,7 @@ align-items: center;
   
 }
 
-.comic-results-cover{
+.comics{
   width: 190px;
   height: 270px;
   transition-duration: 0.5s;
@@ -84,8 +84,8 @@ align-items: center;
   transition-duration: 0.5s;
   
 }
-.character-results-picture{
-  @extend .comic-results-cover;
+.characters{
+  @extend .comics;
   width: 200px;
   transition-duration: 0.5s;
   filter: none
@@ -98,13 +98,13 @@ align-items: center;
   margin-top: 10px;
 }
 
-.comic-results-cover:hover{
+.comics:hover{
   transform: scale(1.05);
   transition-duration: 0.5s;
   filter:drop-shadow(2px 2px 2px #515151);
 }
 
-.character__picture:hover{
+.characters:hover{
   transform: scale(1.05);
   transition-duration: 0.5s;
   filter:drop-shadow(2px 2px 2px #515151);

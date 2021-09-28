@@ -7,8 +7,8 @@ const displayCharacters = (obj, offset) => {
 
     obj.forEach((item: Character) => {
 
-        const characterPicture = createNode('img', { src: `${item.thumbnail.path}.${item.thumbnail.extension}`, alt: `${item.name}`, id: `${item.id}`, class: "character-results-picture" });
-        const divPicture = createNode('div', { class: "character-results-picture" }, characterPicture);
+        const characterPicture = createNode('img', { src: `${item.thumbnail.path}.${item.thumbnail.extension}`, alt: `${item.name}`, id: `${item.id}`, class: "characters" });
+        const divPicture = createNode('div', { class: "characters" }, characterPicture);
         const characterName = createNode('h3', { class: 'h3' }, document.createTextNode(item.name))
         const divName = createNode('div', { class: "character-results-title" }, characterName);
         const divCharacter = createNode('div', { class: "character__results", href: `./index.html?title=${item.name}&id=${item.id}&offset=${offset}` }, divPicture, divName)
@@ -39,9 +39,9 @@ const displaySelectedCharacter = (obj) => {
             characterSelected.appendChild(divPicture)
             characterSelected.appendChild(characterDetail)
             
-            const urlRelatedInfo =  `${BASE_URL}/characters/${item.id}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`
-                console.log(urlRelatedInfo)
-                fetchRelatedInfoComic(urlRelatedInfo, 'characters')
+            // const urlRelatedInfo =  `${BASE_URL}/characters/${item.id}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}`
+            //     console.log(urlRelatedInfo)
+            //     fetchRelatedInfoComic(urlRelatedInfo, 'characters')
                 
         });         
  
