@@ -4,8 +4,8 @@ var displayComics = function (obj, offset) {
     var resultsGrid = document.getElementById('resultsGrid');
     resultsGrid.innerHTML = " ";
     obj.forEach(function (item) {
-        var comicCover = createNode('img', { src: item.thumbnail.path + "." + item.thumbnail.extension, alt: "" + item.title, "class": "comic-results-cover", id: "" + item.id });
-        var divCover = createNode('div', { "class": "comic-results-cover" }, comicCover);
+        var comicCover = createNode('img', { src: item.thumbnail.path + "." + item.thumbnail.extension, alt: "" + item.title, "class": "comics", id: "" + item.id });
+        var divCover = createNode('div', { "class": "comics" }, comicCover);
         var comicTitle = createNode('h3', { "class": 'h3' }, document.createTextNode(item.title));
         var divTitle = createNode('div', { "class": "comic-results-title" }, comicTitle);
         var divComic = createNode('div', { "class": "comic__results", href: "./index.html?title=" + item.title + "&id=" + item.id + "&offset=" + offset }, divCover, divTitle);
@@ -16,12 +16,19 @@ var displayComics = function (obj, offset) {
     });
 };
 //FUNCION DISPLAY COMIC SELECCIONADO
-var displaySelectedComic = function (obj) {
+var displaySelectedComic = function () {
+    var _a = getParams(), id = _a.id, type = _a.type;
+    var resultsGrid = document.getElementById('resultsGrid');
     var comicSelected = document.getElementById('comicSelected');
     var characterSelected = document.getElementById('characterSelected');
-    var resultsGrid = document.getElementById('resultsGrid');
+    comicSelected.innerHTML = '';
     characterSelected.innerHTML = '';
-    obj.forEach(function (item) {
+    fetch(BASE_URL + "/" + type + "/" + id + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
+        .then(function (response) {
+        return response.json();
+    })
+        .then(function (rta) {
+        var item = rta.data.results[0];
         var comicCover = createNode('img', { src: item.thumbnail.path + "." + item.thumbnail.extension, alt: "" + item.title, "class": "comic__cover" });
         var divCover = createNode('div', { "class": "comic__cover" }, comicCover);
         var comicTitle = createNode('h2', { "class": "comic__title" }, document.createTextNode("" + item.title));
@@ -39,8 +46,6 @@ var displaySelectedComic = function (obj) {
         var comicDetail = createNode('div', { "class": "comic__detail" }, comicTitle, publishedTitle, publishedDate, writersTitle, comicWriters, descriptionTitle, comicDescription);
         comicSelected.appendChild(divCover);
         comicSelected.appendChild(comicDetail);
-        var urlRelatedInfo = BASE_URL + "/comics/" + item.id + "/characters?ts=1&apikey=" + API_KEY + "&hash=" + HASH;
-        fetchRelatedInfoComic(urlRelatedInfo, 'comics');
     });
     resultsGrid.style.justifyContent = 'start';
 };

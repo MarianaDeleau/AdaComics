@@ -216,7 +216,7 @@
   margin-right: 20px;
 }
 
-.comic-results-cover, .character-results-picture {
+.comics, .characters {
   width: 190px;
   height: 270px;
   -webkit-transition-duration: 0.5s;
@@ -241,7 +241,7 @@
           transition-duration: 0.5s;
 }
 
-.character-results-picture {
+.characters {
   width: 200px;
   -webkit-transition-duration: 0.5s;
           transition-duration: 0.5s;
@@ -256,7 +256,7 @@
   margin-top: 10px;
 }
 
-.comic-results-cover:hover, .character-results-picture:hover {
+.comics:hover, .characters:hover {
   -webkit-transform: scale(1.05);
           transform: scale(1.05);
   -webkit-transition-duration: 0.5s;
@@ -265,7 +265,7 @@
           filter: drop-shadow(2px 2px 2px #515151);
 }
 
-.character__picture:hover {
+.characters:hover {
   -webkit-transform: scale(1.05);
           transform: scale(1.05);
   -webkit-transition-duration: 0.5s;
@@ -307,6 +307,15 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+}
+
+.character__picture:hover {
+  -webkit-transform: scale(1.05);
+          transform: scale(1.05);
+  -webkit-transition-duration: 0.5s;
+          transition-duration: 0.5s;
+  -webkit-filter: none;
+          filter: none;
 }
 
 @media screen and (max-width: 500px) {
