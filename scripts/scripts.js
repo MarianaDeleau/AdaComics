@@ -97,11 +97,11 @@ var fetchMarvel = function (offset, url, type, id) {
         else {
             if (type === 'comics') {
                 displayCharacters(results, offset);
-                //displaySelectedComic(results)
+                displaySelectedComic();
             }
             else if (type === 'characters') {
                 displayComics(results, offset);
-                // displaySelectedCharacter(results)
+                displaySelectedCharacter();
             }
         }
         resultsCounter(total);
@@ -127,18 +127,7 @@ var handleSelectedItem = function (event) {
     var params = new URLSearchParams(window.location.search);
     params.set('id', itemSelected.id);
     params.set('search__type', (itemSelected.getAttribute('class')));
-    //  params.set('sort__search', sortSearch.value)
     params.set('search__input', "");
-    params.set('page', '1');
-    window.location.href = window.location.pathname + "?" + params.toString();
-};
-//FILTROS A TRAVES DE ID EN QUERY PARAMS
-var handleSelectedItemInfo = function () {
-    var params = new URLSearchParams(window.location.search);
-    var id = params.get('id');
-    params.set('id', id);
-    params.set('search__type', searchType.value);
-    params.set('sort__search', sortSearch.value);
     params.set('page', '1');
     window.location.href = window.location.pathname + "?" + params.toString();
 };
@@ -222,8 +211,7 @@ var setTypeSelectValue = function () {
         searchType.value = 'comics';
     }
 };
-//setTypeSelectValue()
-//INICIO PAGINA
+//REFRESH WINDOW
 var init = function () {
     var _a = getParams(), type = _a.type, input = _a.input, sort = _a.sort, page = _a.page, id = _a.id;
     var url = '';

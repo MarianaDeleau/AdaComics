@@ -109,18 +109,16 @@ const fetchMarvel = (offset, url, type, id) => {
              else {
                 if (type === 'comics') {
                     displayCharacters(results, offset)
-                    //displaySelectedComic(results)
+                    displaySelectedComic()
                 } else if (type === 'characters') {
                     displayComics(results, offset)
-                   // displaySelectedCharacter(results)
-                }
+                    displaySelectedCharacter()                    
+                 }                
              }
              resultsCounter(total)
              disableButtons(offset, total)
-           
              const lastButton = document.getElementById("btnEnd");
              lastButton.dataset.lastpage = Math.ceil(total / rta.data.limit).toString();
-       
          })
 }
 
@@ -146,23 +144,7 @@ const handleSelectedItem = (event) => {
     const params = new URLSearchParams(window.location.search);
     params.set('id', itemSelected.id);
     params.set('search__type', (itemSelected.getAttribute('class')))
-  //  params.set('sort__search', sortSearch.value)
     params.set('search__input', "")
-    params.set('page', '1')
-    
-    window.location.href = `${window.location.pathname}?${params.toString()}`
-    
-}
-
-//FILTROS A TRAVES DE ID EN QUERY PARAMS
-const handleSelectedItemInfo = () => {
-      
-    const params = new URLSearchParams(window.location.search);
-
-    let id = params.get('id')
-    params.set('id', id);
-    params.set('search__type', searchType.value)
-    params.set('sort__search', sortSearch.value)
     params.set('page', '1')
     
     window.location.href = `${window.location.pathname}?${params.toString()}`
@@ -258,9 +240,9 @@ const setTypeSelectValue = () => {
         searchType.value='comics'
     }
 }
-//setTypeSelectValue()
 
-//INICIO PAGINA
+
+//REFRESH WINDOW
 const init = () => {   
     const { type, input, sort, page, id } = getParams()
     let url = ''
@@ -272,6 +254,7 @@ const init = () => {
         } else if (type === 'characters') {
             url = `${BASE_URL}/characters/${id}/comics?ts=1&apikey=${API_KEY}&hash=${HASH}&orderBy=title&offset=${offset}`
         }
+        
     } else if (!id){
         url = `${BASE_URL}/${type}?ts=1&apikey=${API_KEY}&hash=${HASH}&orderBy=${sort}&offset=${offset}`
     }
@@ -281,7 +264,8 @@ const init = () => {
         fetchMarvel(offset, url, type, id)
         setTypeSelectValue()
         changeSelect()
+         
     }        
-
+    
 
 init();

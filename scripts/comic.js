@@ -15,13 +15,20 @@ var displayComics = function (obj, offset) {
         }
     });
 };
-var comicSelected = document.getElementById('comicSelected');
-var characterSelected = document.getElementById('characterSelected');
 //FUNCION DISPLAY COMIC SELECCIONADO
-var displaySelectedComic = function (obj) {
+var displaySelectedComic = function () {
+    var _a = getParams(), id = _a.id, type = _a.type;
     var resultsGrid = document.getElementById('resultsGrid');
+    var comicSelected = document.getElementById('comicSelected');
+    var characterSelected = document.getElementById('characterSelected');
+    comicSelected.innerHTML = '';
     characterSelected.innerHTML = '';
-    obj.forEach(function (item) {
+    fetch(BASE_URL + "/" + type + "/" + id + "?ts=1&apikey=" + API_KEY + "&hash=" + HASH)
+        .then(function (response) {
+        return response.json();
+    })
+        .then(function (rta) {
+        var item = rta.data.results[0];
         var comicCover = createNode('img', { src: item.thumbnail.path + "." + item.thumbnail.extension, alt: "" + item.title, "class": "comic__cover" });
         var divCover = createNode('div', { "class": "comic__cover" }, comicCover);
         var comicTitle = createNode('h2', { "class": "comic__title" }, document.createTextNode("" + item.title));
@@ -39,9 +46,6 @@ var displaySelectedComic = function (obj) {
         var comicDetail = createNode('div', { "class": "comic__detail" }, comicTitle, publishedTitle, publishedDate, writersTitle, comicWriters, descriptionTitle, comicDescription);
         comicSelected.appendChild(divCover);
         comicSelected.appendChild(comicDetail);
-        // const urlRelatedInfo = `${BASE_URL}/comics/${item.id}/characters?ts=1&apikey=${API_KEY}&hash=${HASH}`
-        // //fetchRelatedInfoComic(urlRelatedInfo, 'comics', 0)
-        // fetchRelatedInfoComic(urlRelatedInfo, 'comics', 0)
     });
     resultsGrid.style.justifyContent = 'start';
 };

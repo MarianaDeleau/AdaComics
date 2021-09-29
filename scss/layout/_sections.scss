@@ -134,3 +134,8 @@ align-items: center;
   justify-content: center;
 }
 
+.character__picture:hover{
+  transform: scale(1.05);
+  transition-duration: 0.5s;
+  filter:none;
+}
